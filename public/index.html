@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BaseCred | On-Chain Reputation & Weekly Spotlight on Base</title>
+  
+  <!-- Base Favicon (Official Base Blue Circle) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%230052FF'/></svg>">
+
+  <!-- Open Graph & Twitter Cards -->
+  <meta property="og:title" content="BaseCred | On-Chain Reputation & Weekly Spotlight on Base">
+  <meta property="og:description" content="Verify your Base footprint across 8 on-chain metrics. Unlock 1 Weekly Spotlight Pass to curate top builders.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BaseCred ($CRED) on Base">
+  <meta name="twitter:description" content="On-Chain Reputation Protocol & Weekly Curation Spotlight on Base network.">
+
+  <!-- Farcaster Frame v2 / Warpcast Interactivity -->
+  <meta property="fc:frame" content="vNext">
+  <meta property="fc:frame:image" content="https://basecred.xyz/og-frame.png">
+  <meta property="fc:frame:button:1" content="🔍 Verify Footprint">
+  <meta property="fc:frame:button:1:action" content="post">
+  <meta property="fc:frame:button:2" content="🌟 Weekly Spotlight">
+  <meta property="fc:frame:button:2:action" content="post">
+  <meta property="fc:frame:button:3" content="🌐 Open Web App">
+  <meta property="fc:frame:button:3:action" content="link">
+  <meta property="fc:frame:button:3:target" content="https://basecred.xyz">
+  <meta property="fc:frame:post_url" content="/api/frame">
+
+  <!-- Fonts: Inter & JetBrains Mono for authentic Base/Coinbase on-chain aesthetic -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            // Official Base Brand Colors
+            base: {
+              DEFAULT: '#0052FF',
+              hover: '#0045D8',
+              dark: '#003AC0',
+              subtle: 'rgba(0, 82, 255, 0.12)',
+              border: 'rgba(0, 82, 255, 0.28)'
+            },
+            surface: {
+              DEFAULT: '#0A0C10',
+              card: '#0F131A',
+              cardHover: '#131822',
+              input: '#07090D',
+              border: '#1E2533',
+              borderSubtle: '#151B26'
+            }
+          },
+          fontFamily: {
+            sans: ['"Inter"', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace']
+          },
+          boxShadow: {
+            'base-sm': '0 2px 8px -1px rgba(0, 82, 255, 0.25)',
+            'base-md': '0 4px 16px -2px rgba(0, 82, 255, 0.35)',
+            'base-glow': '0 0 30px -5px rgba(0, 82, 255, 0.3)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Ethers.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.4/ethers.umd.min.js"></script>
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* Authentic Base Network Clean Dark Theme (No generic AI purple/neon meshes) */
+    body {
+      background-color: #06080C;
+      color: #F1F5F9;
+      background-image: 
+        radial-gradient(circle at 50% -20%, rgba(0, 82, 255, 0.15) 0%, transparent 55%),
+        linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+      background-size: 100% 100%, 32px 32px, 32px 32px;
+      background-attachment: fixed;
+    }
+
+    /* Base On-Chain Cards */
+    .glass-card, .base-card {
+      background-color: #0F131A;
+      border: 1px solid #1E2533;
+      box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.5);
+    }
+    
+    .glass-card-interactive, .base-card-interactive {
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-card-interactive:hover, .base-card-interactive:hover {
+      border-color: #0052FF;
+      background-color: #121721;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px -4px rgba(0, 82, 255, 0.18);
+    }
+
+    /* Segmented Navigation Active State */
+    .tab-active, .tab-pill-active {
+      background-color: #0052FF !important;
+      color: #FFFFFF !important;
+      font-weight: 700 !important;
+      box-shadow: 0 2px 10px rgba(0, 82, 255, 0.4) !important;
+    }
+
+    /* Custom Minimalist Scrollbar */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #06080C;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1E2533;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #0052FF;
+    }
+
+    /* Base Logo Glyph */
+    .base-logo-glyph {
+      width: 28px;
+      height: 28px;
+      background-color: #0052FF;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 12px rgba(0, 82, 255, 0.5);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans antialiased selection:bg-base selection:text-white">
+
+  <!-- TOP NAVBAR: AUTHENTIC BASE NETWORK HEADER -->
+  <header class="sticky top-0 z-50 bg-[#06080C]/90 backdrop-blur-md border-b border-[#1E2533] px-4 lg:px-8 py-3 transition-all">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-3">
+      
+      <!-- Brand & Official Base Identity -->
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <!-- Official Base Circle Mark -->
+          <div class="relative flex items-center justify-center">
+            <div class="base-logo-glyph">
+              <!-- Inner subtle ring for authentic coin aesthetic -->
+              <div class="w-3.5 h-3.5 rounded-full border-2 border-white/90"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xl font-extrabold tracking-tight text-white font-sans">BaseCred</span>
+              <span class="px-2 py-0.5 text-[10px] font-bold rounded-md bg-base/20 text-blue-400 border border-base/40 font-mono tracking-wider">$CRED</span>
+            </div>
+            <p class="text-[11px] text-slate-400 font-medium">On-Chain Reputation & Weekly Base Spotlight</p>
+          </div>
+        </div>
+
+        <button id="mobileConnectBtn" onclick="connectWallet()" class="md:hidden px-3.5 py-1.5 rounded-xl bg-base hover:bg-base-hover text-xs font-bold text-white shadow-base-sm">
+          Connect
+        </button>
+      </div>
+
+      <!-- Segmented Navigation (Explorer / Base.org Style) -->
+      <nav class="flex items-center gap-1 p-1 bg-[#0B0E14] rounded-xl border border-[#1E2533] overflow-x-auto text-xs font-medium">
+        <button id="navTabFootprint" onclick="switchTab('footprint')" class="tab-active px-3.5 py-1.5 rounded-lg transition-all duration-150 whitespace-nowrap flex items-center gap-2">
+          <i data-lucide="scan" class="w-3.5 h-3.5"></i>
+          <span>1. On-Chain Footprint</span>
+        </button>
+        <button id="navTabSpotlight" onclick="switchTab('spotlight')" class="px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all duration-150 whitespace-nowrap flex items-center gap-2">
+          <i data-lucide="award" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span>2. Weekly Spotlight</span>
+        </button>
+        <button id="navTabMarket" onclick="switchTab('market')" class="px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all duration-150 whitespace-nowrap flex items-center gap-2">
+          <i data-lucide="shopping-bag" class="w-3.5 h-3.5 text-emerald-400"></i>
+          <span>3. Pass Market</span>
+        </button>
+        <button id="navTabRoadmap" onclick="switchTab('roadmap')" class="px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all duration-150 whitespace-nowrap flex items-center gap-2">
+          <i data-lucide="milestone" class="w-3.5 h-3.5 text-blue-400"></i>
+          <span>4. Roadmap & Rules</span>
+        </button>
+      </nav>
+
+      <!-- Network & Wallet Controls -->
+      <div class="hidden md:flex items-center gap-3">
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#0B0E14] border border-[#1E2533] text-xs font-mono text-slate-300">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Base (8453)</span>
+        </div>
+
+        <button id="connectWalletBtn" onclick="connectWallet()" class="flex items-center gap-2 px-4 py-2 rounded-xl bg-base hover:bg-base-hover text-white font-bold text-xs transition shadow-base-sm active:scale-95">
+          <i data-lucide="wallet" class="w-3.5 h-3.5"></i>
+          <span id="connectWalletText">Connect Wallet</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 lg:px-8 py-8">
+
+    <!-- ================================================================= -->
+    <!-- TAB 1: CORE ON-CHAIN FOOTPRINT & REPUTATION ENGINE -->
+    <!-- ================================================================= -->
+    <div id="tabFootprintContent" class="space-y-8 animate-fadeIn">
+      
+      <!-- Hero Section: Clean, Authoritative On-Chain Header -->
+      <section class="text-center max-w-3xl mx-auto space-y-4 pt-2">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-base/10 border border-base/30 text-xs font-bold text-blue-400">
+          <span class="w-2 h-2 rounded-full bg-base"></span>
+          <span>BUILT ON BASE • ON-CHAIN REPUTATION PROTOCOL</span>
+        </div>
+        
+        <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight text-white font-sans">
+          Verify Your Base Footprint.<br>
+          <span class="text-blue-500">Curate the Best of Base.</span>
+        </h1>
+        
+        <p class="text-slate-400 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
+          Auditing 8 verifiable on-chain factors: Gas burnt, Ethereum vintage, Base nonce, consistency, official bridge, Basenames, DeFi activity, and anti-Sybil screening.
+        </p>
+
+        <!-- Metric Summary Strip (Explorer Style) -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 text-center">
+          <div class="base-card rounded-xl p-4 border border-[#1E2533]">
+            <p class="text-[11px] text-slate-400 font-semibold uppercase tracking-wider">Creds Pool</p>
+            <p class="text-xl font-extrabold text-white font-mono mt-1">100,000,000 <span class="text-xs text-blue-400 font-sans font-bold">$CRED</span></p>
+          </div>
+          <div class="base-card rounded-xl p-4 border border-[#1E2533]">
+            <p class="text-[11px] text-slate-400 font-semibold uppercase tracking-wider">Weekly Quota</p>
+            <p class="text-xl font-extrabold text-amber-400 font-mono mt-1">1 Pass / Wk</p>
+          </div>
+          <div class="base-card rounded-xl p-4 border border-[#1E2533]">
+            <p class="text-[11px] text-slate-400 font-semibold uppercase tracking-wider">Pass Utility</p>
+            <p class="text-xl font-extrabold text-emerald-400 font-mono mt-1">Tradeable P2P</p>
+          </div>
+          <div class="base-card rounded-xl p-4 border border-[#1E2533]">
+            <p class="text-[11px] text-slate-400 font-semibold uppercase tracking-wider">Snapshot Phase</p>
+            <p class="text-xl font-extrabold text-blue-400 flex items-center justify-center gap-1.5 mt-1 font-mono">
+              <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+              <span>1 Wk Pre-TGE</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Search & Evaluation Box (Basescan / Web3 Style) -->
+      <section class="max-w-2xl mx-auto">
+        <div class="base-card rounded-2xl p-6 sm:p-7 border border-[#1E2533] space-y-4">
+          
+          <div class="flex items-center justify-between">
+            <label for="addressInput" class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+              <i data-lucide="search" class="w-4 h-4 text-blue-500"></i>
+              <span>Enter Base or Ethereum Address</span>
+            </label>
+            <button onclick="pasteFromClipboard()" class="text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1 font-medium transition">
+              <i data-lucide="clipboard" class="w-3 h-3"></i>
+              <span>Paste</span>
+            </button>
+          </div>
+
+          <div class="relative">
+            <input 
+              type="text" 
+              id="addressInput" 
+              placeholder="0x... or basename.base.eth" 
+              class="w-full bg-[#07090D] border border-[#1E2533] rounded-xl px-4 py-3.5 pl-11 text-sm font-mono text-white placeholder-slate-600 focus:outline-none focus:border-base focus:ring-1 focus:ring-base transition"
+            />
+            <div class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500">
+              <i data-lucide="hash" class="w-4 h-4"></i>
+            </div>
+          </div>
+
+          <div class="flex flex-col sm:flex-row gap-3">
+            <button 
+              id="checkBtn" 
+              onclick="checkWalletEligibility()" 
+              class="flex-1 py-3.5 px-6 rounded-xl bg-base hover:bg-base-hover text-white font-bold text-sm flex items-center justify-center gap-2 transition shadow-base-sm active:scale-95 disabled:opacity-50"
+            >
+              <i data-lucide="shield-check" class="w-4 h-4"></i>
+              <span id="checkBtnText">Evaluate Footprint & Claim Weekly Pass</span>
+            </button>
+            
+            <button 
+              onclick="useConnectedWallet()" 
+              id="useConnectedBtn"
+              class="hidden py-3.5 px-4 rounded-xl bg-[#141A24] hover:bg-[#1A2230] border border-[#1E2533] text-slate-200 text-sm font-semibold transition flex items-center justify-center gap-2"
+            >
+              <i data-lucide="user-check" class="w-4 h-4 text-emerald-400"></i>
+              <span>My Wallet</span>
+            </button>
+          </div>
+
+          <!-- Quick Demo Buttons -->
+          <div class="pt-3 border-t border-[#1E2533] flex flex-wrap items-center gap-2">
+            <span class="text-xs text-slate-500 font-medium">Quick samples:</span>
+            <button onclick="setSampleAddress('0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045')" class="px-2.5 py-1 rounded-lg bg-[#0B0E14] hover:bg-[#131822] border border-[#1E2533] text-[11px] font-mono text-slate-300 transition hover:border-blue-500/50">
+              Vitalik (0xd8dA...6045)
+            </button>
+            <button onclick="setSampleAddress('0x710bda43e60471b47376c67d142145b4bf37715b')" class="px-2.5 py-1 rounded-lg bg-[#0B0E14] hover:bg-[#131822] border border-[#1E2533] text-[11px] font-mono text-slate-300 transition hover:border-blue-500/50">
+              Aerodrome LP (0x710b...715b)
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SCANNER LOADING ANIMATION (On-Chain Block Indexer Aesthetic) -->
+      <div id="loadingScanner" class="hidden max-w-2xl mx-auto base-card rounded-2xl p-8 border border-[#1E2533] text-center space-y-4">
+        <div class="relative w-14 h-14 mx-auto">
+          <div class="w-14 h-14 rounded-full border-4 border-base/20 border-t-base animate-spin"></div>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="w-3.5 h-3.5 rounded-full bg-base"></div>
+          </div>
+        </div>
+        <div>
+          <h3 class="text-base font-bold text-white font-sans">Auditing Base & Ethereum Footprint...</h3>
+          <p id="scannerStepText" class="text-xs text-slate-400 mt-1 font-mono">Querying RPC block history & Basename registry...</p>
+        </div>
+        <div class="w-48 mx-auto bg-[#07090D] rounded-full h-1.5 overflow-hidden border border-[#1E2533]">
+          <div class="bg-base h-full rounded-full w-2/3 animate-pulse"></div>
+        </div>
+      </div>
+
+      <!-- RESULTS CONTAINER -->
+      <div id="resultsContainer" class="hidden space-y-8 animate-fadeIn">
+        
+        <!-- Summary Card -->
+        <section class="max-w-4xl mx-auto base-card rounded-2xl p-6 sm:p-8 border border-base/40 relative overflow-hidden">
+          <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+            
+            <div class="space-y-2 text-left">
+              <div class="flex items-center gap-2">
+                <span id="tierBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-base/20 text-blue-300 border border-base/40 font-mono tracking-wider">
+                  Tier 1: Base Pioneer & Whale
+                </span>
+                <span id="sybilHealthBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-mono">
+                  🛡️ 95% Sybil Health
+                </span>
+              </div>
+              
+              <h2 id="resultTitle" class="text-2xl sm:text-3xl font-extrabold text-white">
+                Wallet Verified on Base! 🎉
+              </h2>
+              
+              <p class="text-xs text-slate-400 font-mono truncate max-w-sm" id="evaluatedAddress">
+                0x...
+              </p>
+            </div>
+
+            <!-- Balances Display -->
+            <div class="grid grid-cols-2 gap-3 min-w-[280px]">
+              <div class="bg-[#07090D] border border-[#1E2533] rounded-xl p-4 text-center">
+                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Base Credits</p>
+                <p class="text-2xl font-black text-white font-mono mt-0.5" id="tokenAmountDisplay">10,000</p>
+                <p class="text-[10px] text-blue-400 font-mono font-bold">$CRED Points</p>
+              </div>
+              <div class="bg-[#07090D] border border-[#1E2533] rounded-xl p-4 text-center border-l-2 border-l-amber-500">
+                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Weekly Pass</p>
+                <p class="text-2xl font-black text-amber-400 font-mono mt-0.5" id="weeklyPassDisplay">1 Available</p>
+                <p class="text-[10px] text-slate-400 font-mono" id="epochDisplay">Epoch: 2026-W36</p>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col items-center gap-2 w-full md:w-auto">
+              <button onclick="switchTab('spotlight')" class="w-full md:w-auto px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-[#06080C] font-extrabold text-xs flex items-center justify-center gap-2 transition active:scale-95 shadow-sm">
+                <i data-lucide="award" class="w-4 h-4"></i>
+                <span>Use Pass in Spotlight</span>
+              </button>
+              <button onclick="switchTab('market')" class="text-xs text-emerald-400 hover:text-emerald-300 font-semibold flex items-center gap-1 transition font-mono">
+                <span>Trade pass on Market</span>
+                <i data-lucide="arrow-right" class="w-3 h-3"></i>
+              </button>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- 8 Detailed Factors Grid -->
+        <section class="max-w-6xl mx-auto space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+              <i data-lucide="bar-chart-3" class="w-4 h-4 text-blue-500"></i>
+              <span>On-Chain Footprint Metrics</span>
+            </h3>
+            <div class="font-mono text-xs">
+              <span class="text-slate-400">Total Score:</span>
+              <span id="totalScoreValue" class="font-bold text-white ml-1">1,020</span>
+              <span class="text-slate-500">/ 1,500</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            <!-- Factor 1: Gas Fee -->
+            <div class="base-card base-card-interactive rounded-xl p-4 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-amber-400 flex items-center gap-1.5"><i data-lucide="fuel" class="w-3.5 h-3.5"></i>Gas Burnt</span>
+                <span id="gasScorePill" class="text-xs font-mono font-bold text-blue-400">250 / 250</span>
+              </div>
+              <div>
+                <p id="gasAmountDisplay" class="text-lg font-black text-white font-mono">0.185 ETH</p>
+                <p id="gasUsdDisplay" class="text-xs text-slate-400">~$490 USD burnt</p>
+              </div>
+              <div class="w-full bg-[#07090D] rounded-full h-1.5 overflow-hidden border border-[#1E2533]">
+                <div id="gasProgressBar" class="bg-amber-500 h-full rounded-full" style="width: 100%;"></div>
+              </div>
+              <div id="gasBadge" class="text-[11px] font-bold text-amber-300">🔥 Gas Whale</div>
+            </div>
+
+            <!-- Factor 2: Ethereum L1 Vintage -->
+            <div class="base-card base-card-interactive rounded-xl p-4 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-300 flex items-center gap-1.5"><i data-lucide="hourglass" class="w-3.5 h-3.5 text-blue-400"></i>Ethereum L1 Age</span>
+                <span id="ethAgeScorePill" class="text-xs font-mono font-bold text-blue-400">250 / 250</span>
+              </div>
+              <div>
+                <p id="ethAgeDisplay" class="text-lg font-black text-white font-mono">3.2 Years</p>
+                <p id="ethTxDisplay" class="text-xs text-slate-400">First tx in 2021</p>
+              </div>
+              <div class="w-full bg-[#07090D] rounded-full h-1.5 overflow-hidden border border-[#1E2533]">
+                <div id="ethAgeProgressBar" class="bg-blue-500 h-full rounded-full" style="width: 100%;"></div>
+              </div>
+              <div id="ethBadge" class="text-[11px] font-bold text-blue-300">🏛️ Ethereum OG</div>
+            </div>
+
+            <!-- Factor 3: Base Nonce -->
+            <div class="base-card base-card-interactive rounded-xl p-4 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-blue-400 flex items-center gap-1.5"><i data-lucide="layers" class="w-3.5 h-3.5"></i>Base Nonce</span>
+                <span id="baseScorePill" class="text-xs font-mono font-bold text-blue-400">300 / 300</span>
+              </div>
+              <div>
+                <p id="baseTxDisplay" class="text-lg font-black text-white font-mono">148 Txs</p>
+                <p id="baseAgeDisplay" class="text-xs text-slate-400">Active Base explorer</p>
+              </div>
+              <div class="w-full bg-[#07090D] rounded-full h-1.5 overflow-hidden border border-[#1E2533]">
+                <div id="baseProgressBar" class="bg-base h-full rounded-full" style="width: 100%;"></div>
+              </div>
+              <div id="baseBadge" class="text-[11px] font-bold text-blue-300">🚀 Base Power User</div>
+            </div>
+
+            <!-- Factor 4: Consistency -->
+            <div class="base-card base-card-interactive rounded-xl p-4 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-300 flex items-center gap-1.5"><i data-lucide="calendar" class="w-3.5 h-3.5 text-blue-400"></i>Active Months</span>
+                <span id="consistencyScorePill" class="text-xs font-mono font-bold text-blue-400">200 / 200</span>
+              </div>
+              <div>
+                <p id="consistencyMonthsDisplay" class="text-lg font-black text-white font-mono">10 Months</p>
+                <p class="text-xs text-slate-400">Organic multi-month</p>
+              </div>
+              <div class="w-full bg-[#07090D] rounded-full h-1.5 overflow-hidden border border-[#1E2533]">
+                <div id="consistencyProgressBar" class="bg-base h-full rounded-full" style="width: 100%;"></div>
+              </div>
+              <div id="consistencyBadge" class="text-[11px] font-bold text-slate-300">💎 Organic Consistency</div>
+            </div>
+
+            <!-- Factor 5: Official Bridge -->
+            <div class="base-card base-card-interactive rounded-xl p-4 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-emerald-400 flex items-center gap-1.5"><i data-lucide="git-commit" class="w-3.5 h-3.5"></i>Portal Bridge</span>
+                <span id="bridgeScorePill" class="text-xs font-mono font-bold text-blue-400">150 / 150</span>
+              </div>
+              <div>
+                <p id="bridgeStatusDisplay" class="text-lg font-black text-white font-mono">Verified ✅</p>
+                <p id="bridgeAmountDisplay" class="text-xs text-slate-400">Bridged ETH via Portal</p>
+              </div>
+              <div class="w-full bg-[#07090D] rounded-full h-1.5 overflow-hidden border border-[#1E2533]">
+                <div id="bridgeProgressBar" class="bg-emerald-500 h-full rounded-full" style="width: 100%;"></div>
+              </div>
+              <div id="bridgeBadge" class="text-[11px] font-bold text-emerald-300">🌉 Official Bridge User</div>
+            </div>
+
+            <!-- Factor 6: Basename -->
+            <div class="base-card base-card-interactive rounded-xl p-4 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-blue-400 flex items-center gap-1.5"><i data-lucide="badge-check" class="w-3.5 h-3.5"></i>Basename (.base.eth)</span>
+                <span id="basenameScorePill" class="text-xs font-mono font-bold text-blue-400">180 / 180</span>
+              </div>
+              <div>
+                <p id="basenameDisplay" class="text-lg font-black text-white font-mono">Registered 🆔</p>
+                <p id="basenameLabelDisplay" class="text-xs text-slate-400 truncate font-mono">vitalik.base.eth</p>
+              </div>
+              <div class="w-full bg-[#07090D] rounded-full h-1.5 overflow-hidden border border-[#1E2533]">
+                <div id="basenameProgressBar" class="bg-base h-full rounded-full" style="width: 100%;"></div>
+              </div>
+              <div id="basenameBadge" class="text-[11px] font-bold text-blue-300">🆔 Verified Basename</div>
+            </div>
+
+            <!-- Factor 7: Base DeFi -->
+            <div class="base-card base-card-interactive rounded-xl p-4 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-300 flex items-center gap-1.5"><i data-lucide="cpu" class="w-3.5 h-3.5 text-blue-400"></i>Base DeFi</span>
+                <span id="defiScorePill" class="text-xs font-mono font-bold text-blue-400">200 / 200</span>
+              </div>
+              <div>
+                <p id="defiCountDisplay" class="text-lg font-black text-white font-mono">4 Protocols</p>
+                <p id="defiListDisplay" class="text-xs text-slate-400 truncate">Aerodrome, Uniswap, Moonwell</p>
+              </div>
+              <div class="w-full bg-[#07090D] rounded-full h-1.5 overflow-hidden border border-[#1E2533]">
+                <div id="defiProgressBar" class="bg-base h-full rounded-full" style="width: 100%;"></div>
+              </div>
+              <div id="defiBadge" class="text-[11px] font-bold text-slate-300">⚡ Active DeFi User</div>
+            </div>
+
+            <!-- Factor 8: Sybil Health -->
+            <div class="base-card base-card-interactive rounded-xl p-4 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-emerald-400 flex items-center gap-1.5"><i data-lucide="shield-check" class="w-3.5 h-3.5"></i>Sybil Health</span>
+                <span id="sybilScorePill" class="text-xs font-mono font-bold text-emerald-400">95 / 100</span>
+              </div>
+              <div>
+                <p id="sybilHealthDisplay" class="text-lg font-black text-emerald-400 font-mono">Human Verified 🛡️</p>
+                <p id="sybilFlagsDisplay" class="text-xs text-slate-400">No bot flags detected</p>
+              </div>
+              <div class="w-full bg-[#07090D] rounded-full h-1.5 overflow-hidden border border-[#1E2533]">
+                <div id="sybilProgressBar" class="bg-emerald-500 h-full rounded-full" style="width: 95%;"></div>
+              </div>
+              <div id="sybilBadge" class="text-[11px] font-bold text-emerald-300">✅ Human Identity Passed</div>
+            </div>
+
+          </div>
+        </section>
+
+      </div>
+
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- TAB 2: WEEKLY BASE SPOTLIGHT (CONTENT ENDORSEMENT) -->
+    <!-- ================================================================= -->
+    <div id="tabSpotlightContent" class="hidden space-y-8 animate-fadeIn">
+      
+      <!-- Spotlight Banner -->
+      <section class="max-w-4xl mx-auto base-card rounded-2xl p-6 sm:p-8 border border-amber-500/40 relative overflow-hidden">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div class="space-y-2 text-left">
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 text-amber-300 text-xs font-bold border border-amber-500/30">
+              <i data-lucide="award" class="w-3.5 h-3.5"></i>
+              <span>Weekly Base Spotlight Active</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Endorse Top Base Creators on X</h2>
+            <p class="text-xs sm:text-sm text-slate-400 max-w-lg leading-relaxed">
+              Every eligible wallet holds <b>exactly 1 Spotlight Pass per week</b>. Burn it to back high-effort content about Base that tags <b>@base</b> and <b>@BaseCred</b>.
+            </p>
+          </div>
+
+          <div class="bg-[#07090D] p-5 rounded-xl border border-[#1E2533] text-center min-w-[220px]">
+            <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Your Weekly Pass</p>
+            <p class="text-3xl font-black text-amber-400 font-mono my-1" id="spotlightPassCount">1 <span class="text-sm font-sans text-slate-400">Available</span></p>
+            <p class="text-[11px] text-slate-400 flex items-center justify-center gap-1 font-medium">
+              <i data-lucide="clock" class="w-3 h-3"></i>
+              <span>Resets Sunday 00:00 UTC</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Endorsement Form -->
+      <section class="max-w-4xl mx-auto base-card rounded-2xl p-6 sm:p-7 border border-[#1E2533] space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2 uppercase tracking-wider">
+            <i data-lucide="send" class="w-4 h-4 text-amber-400"></i>
+            <span>Submit Your Weekly Endorsement</span>
+          </h3>
+          <span class="text-xs text-amber-300 bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20 font-bold">
+            Curator Reward: +300 $CRED (2x if @base retweets)
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="text-xs font-semibold text-slate-400 block mb-1">Creator X (Twitter) Handle:</label>
+            <div class="relative">
+              <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 font-mono">@</span>
+              <input 
+                type="text" 
+                id="endorseCreatorInput" 
+                placeholder="creator_handle" 
+                value="aerobase_guru"
+                class="w-full bg-[#07090D] border border-[#1E2533] rounded-xl px-4 py-2.5 pl-8 text-xs font-mono text-white focus:outline-none focus:border-amber-500"
+              />
+            </div>
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-slate-400 block mb-1">Tweet URL on X:</label>
+            <input 
+              type="text" 
+              id="endorseUrlInput" 
+              placeholder="https://x.com/.../status/..." 
+              value="https://x.com/aerobase_guru/status/1890123"
+              class="w-full bg-[#07090D] border border-[#1E2533] rounded-xl px-4 py-2.5 text-xs font-mono text-white focus:outline-none focus:border-amber-500"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label class="text-xs font-semibold text-slate-400 block mb-1">Tweet Text / Excerpt (Must mention @base):</label>
+          <input 
+            type="text" 
+            id="endorseTextInput" 
+            value="Comprehensive thread analyzing Aerodrome liquidity pools on @base! Tagging @BaseCred spotlight"
+            class="w-full bg-[#07090D] border border-[#1E2533] rounded-xl px-4 py-2.5 text-xs font-mono text-white focus:outline-none focus:border-amber-500"
+          />
+        </div>
+
+        <div class="flex items-center gap-2 pt-1">
+          <input type="checkbox" id="simBaseRtCheckbox" class="rounded bg-[#07090D] border-[#1E2533] text-amber-500 focus:ring-0">
+          <label for="simBaseRtCheckbox" class="text-xs text-slate-300 font-medium cursor-pointer">Simulate @base official Retweet (Triggers 2x Viral Multiplier!)</label>
+        </div>
+
+        <button onclick="submitEndorsement()" class="w-full py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-[#06080C] font-extrabold text-xs flex items-center justify-center gap-2 transition active:scale-95 shadow-sm">
+          <i data-lucide="award" class="w-4 h-4"></i>
+          <span>Burn Weekly Pass & Endorse Creator (+1000 Creator / +300 Curator $CRED)</span>
+        </button>
+
+        <div id="endorseResultBox" class="hidden p-4 rounded-xl border text-xs font-mono space-y-1"></div>
+      </section>
+
+      <!-- Weekly Hall of Fame -->
+      <section class="max-w-4xl mx-auto space-y-4">
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <i data-lucide="trophy" class="w-4 h-4 text-amber-400"></i>
+          <span>Weekly Base Spotlight Hall of Fame</span>
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="hallOfFameContainer">
+          <!-- Populated dynamically -->
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- TAB 3: PASS MARKETPLACE (TRADEABLE P2P PASSES) -->
+    <!-- ================================================================= -->
+    <div id="tabMarketContent" class="hidden space-y-8 animate-fadeIn max-w-4xl mx-auto">
+      
+      <!-- Marketplace Banner -->
+      <section class="base-card rounded-2xl p-6 sm:p-8 border border-emerald-500/40 relative overflow-hidden">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div class="space-y-2 text-left">
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-300 text-xs font-bold border border-emerald-500/30">
+              <i data-lucide="shopping-bag" class="w-3.5 h-3.5"></i>
+              <span>P2P Spotlight Pass Marketplace</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Trade Spotlight Passes</h2>
+            <p class="text-xs sm:text-sm text-slate-400 max-w-lg leading-relaxed">
+              Don't want to curate content this week? <b>Sell your Weekly Pass to creators for ETH</b>. Creators can buy community passes to climb the weekly Hall of Fame.
+            </p>
+          </div>
+
+          <!-- List My Pass Box -->
+          <div class="bg-[#07090D] p-5 rounded-xl border border-[#1E2533] text-center min-w-[240px] space-y-2.5">
+            <p class="text-xs text-slate-400 font-semibold">Sell My Weekly Pass</p>
+            <div class="flex items-center justify-center gap-2">
+              <input type="number" id="listPriceInput" step="0.0005" value="0.002" class="w-24 bg-[#0B0E14] border border-[#1E2533] rounded-lg px-2 py-1.5 text-xs font-mono text-white text-center focus:border-emerald-500">
+              <span class="text-xs font-mono text-blue-400 font-bold">ETH</span>
+            </div>
+            <button onclick="listPassOnMarket()" class="w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-[#06080C] font-extrabold text-xs transition active:scale-95">
+              List Pass for Sale
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Active Listings Grid -->
+      <section class="space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2 uppercase tracking-wider">
+            <i data-lucide="tag" class="w-4 h-4 text-emerald-400"></i>
+            <span>Active Tradeable Pass Listings</span>
+          </h3>
+          <button onclick="fetchMarketListings()" class="text-xs text-slate-400 hover:text-white flex items-center gap-1 font-semibold transition">
+            <i data-lucide="refresh-cw" class="w-3 h-3"></i>
+            <span>Refresh Market</span>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" id="marketListingsGrid">
+          <!-- Populated dynamically -->
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- TAB 4: TGE ROADMAP & CURATE-TO-EARN RULES -->
+    <!-- ================================================================= -->
+    <div id="tabRoadmapContent" class="hidden space-y-8 animate-fadeIn max-w-4xl mx-auto">
+      
+      <!-- 4-Phase Roadmap -->
+      <section class="base-card rounded-2xl p-6 sm:p-8 border border-[#1E2533] space-y-6">
+        <div>
+          <h2 class="text-2xl font-extrabold text-white flex items-center gap-2">
+            <i data-lucide="milestone" class="w-5 h-5 text-blue-500"></i>
+            <span>BaseCred TGE Roadmap</span>
+          </h2>
+          <p class="text-xs text-slate-400 mt-1 font-medium">Clear lifecycle timeline leading up to the Token Generation Event on Base</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+          <div class="p-4 rounded-xl bg-[#07090D] border border-blue-500/40 space-y-2">
+            <span class="text-[10px] font-bold text-blue-400 uppercase font-mono">Phase 1 • Genesis</span>
+            <h4 class="font-bold text-white text-sm">On-Chain Creds</h4>
+            <p class="text-[11px] text-slate-400 leading-relaxed">Initial footprint evaluation from 8 factors across Base & L1.</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-[#07090D] border border-amber-500/50 space-y-2">
+            <span class="text-[10px] font-bold text-amber-400 uppercase font-mono flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+              <span>Phase 2 • Active</span>
+            </span>
+            <h4 class="font-bold text-white text-sm">Weekly Spotlight</h4>
+            <p class="text-[11px] text-slate-400 leading-relaxed">1 pass/week. Endorse top @base content on X or trade passes on market.</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-[#07090D] border border-[#1E2533] space-y-2">
+            <span class="text-[10px] font-bold text-slate-400 uppercase font-mono">Phase 3 • 1 Wk Pre-TGE</span>
+            <h4 class="font-bold text-white text-sm">Snapshot & Purge</h4>
+            <p class="text-[11px] text-slate-400 leading-relaxed">Passes freeze. Final leaderboard audited. Merkle tree generated.</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-[#07090D] border border-emerald-500/40 space-y-2">
+            <span class="text-[10px] font-bold text-emerald-400 uppercase font-mono">Phase 4 • Launch</span>
+            <h4 class="font-bold text-white text-sm">$CRED Claim</h4>
+            <p class="text-[11px] text-slate-400 leading-relaxed">Credits convert to real $CRED tokens via Merkle Distributor on Base.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Rules of the Weekly Spotlight -->
+      <section class="base-card rounded-2xl p-6 sm:p-8 border border-[#1E2533] space-y-6">
+        <div>
+          <h2 class="text-2xl font-extrabold text-white flex items-center gap-2">
+            <i data-lucide="shield-check" class="w-5 h-5 text-amber-400"></i>
+            <span>Weekly Spotlight & Curation Rules</span>
+          </h2>
+          <p class="text-xs text-slate-400 mt-1 font-medium">Engineered for zero spam and maximum quality for the Base ecosystem</p>
+        </div>
+
+        <div class="space-y-3">
+          <div class="p-4 rounded-xl bg-[#07090D] border border-[#1E2533] flex items-start gap-4">
+            <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-black text-sm shrink-0">1</div>
+            <div>
+              <h4 class="font-bold text-white text-sm">Strict 1 Pass Per Week Quota</h4>
+              <p class="text-xs text-slate-400 mt-0.5 leading-relaxed">Every eligible wallet receives exactly one non-stackable Spotlight Pass each calendar week. Unused passes do not accumulate, ensuring fresh weekly curation.</p>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-xl bg-[#07090D] border border-[#1E2533] flex items-start gap-4">
+            <div class="w-8 h-8 rounded-lg bg-base/20 text-blue-400 flex items-center justify-center font-black text-sm shrink-0">2</div>
+            <div>
+              <h4 class="font-bold text-white text-sm">Mandatory @base & Quality Standard</h4>
+              <p class="text-xs text-slate-400 mt-0.5 leading-relaxed">Endorsements are only valid on tweets that explicitly tag @base and discuss Base ecosystem development, tutorials, analytics, or art.</p>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-xl bg-[#07090D] border border-[#1E2533] flex items-start gap-4">
+            <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-black text-sm shrink-0">3</div>
+            <div>
+              <h4 class="font-bold text-white text-sm">Curate-to-Earn (The 2x Viral Multiplier)</h4>
+              <p class="text-xs text-slate-400 mt-0.5 leading-relaxed">When you endorse a creator, you earn 300 Curator $CRED while the creator gets 1000 Creator $CRED. If the tweet is retweeted or highlighted by @base, both earn a 2.0x bonus multiplier!</p>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-xl bg-[#07090D] border border-[#1E2533] flex items-start gap-4">
+            <div class="w-8 h-8 rounded-lg bg-blue-600/20 text-blue-300 flex items-center justify-center font-black text-sm shrink-0">4</div>
+            <div>
+              <h4 class="font-bold text-white text-sm">Tradeable Peer-to-Peer Pass Vouchers</h4>
+              <p class="text-xs text-slate-400 mt-0.5 leading-relaxed">Holders can choose to sell their weekly pass on the Pass Market to creators who want to accumulate more endorsements for the weekly Hall of Fame.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <!-- FOOTER: BUILT ON BASE -->
+  <footer class="base-card border-t border-[#1E2533] py-6 px-4 text-center text-xs text-slate-500 mt-12">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2.5">
+        <span class="w-2.5 h-2.5 rounded-full bg-base"></span>
+        <span class="font-medium text-slate-400">BaseCred • On-Chain Reputation & Content Curation Protocol</span>
+      </div>
+      <div class="flex items-center gap-4 text-slate-400 font-mono text-[11px]">
+        <a href="https://base.org" target="_blank" class="hover:text-blue-400 transition">Base.org</a>
+        <span>•</span>
+        <a href="https://basescan.org" target="_blank" class="hover:text-blue-400 transition">Basescan</a>
+        <span>•</span>
+        <a href="https://x.com/base" target="_blank" class="hover:text-blue-400 transition">@base on X</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="./app.js"></script>
+</body>
+</html>

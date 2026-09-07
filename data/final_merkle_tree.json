@@ -1,0 +1,73 @@
+{
+  "token_name": "BaseCred Token",
+  "token_symbol": "$CRED",
+  "merkle_root": "0xd616f8d632e6e7eab92e2575c361d976b622750f692f4b01e76e56e3ca8ee3c0",
+  "total_eligible_wallets": 6,
+  "total_tokens_allocated": 43100,
+  "records": {
+    "0xd8da6bf26964af9d7eed9e03e53415d37aa96045": {
+      "index": 0,
+      "account": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount_tokens": 12600,
+      "amount_wei": 12600000000000000000000,
+      "merkle_proof": [
+        "0x02ac3ab0bc4994a49653ea6b62bad110ec45cb3eb2999ddb9611e937bce4452a",
+        "0x40a2fe092bb9205a65b45c4382d99168a1859025b34aecc6aba65bf1f27e1565",
+        "0x7f62316f321f1a26fa2dc99e014ae53ef8c159fe51ab5f7ad7407e433562e94a"
+      ]
+    },
+    "0xa9f710e0711122b95301ba81b860cb5fbdff0b45": {
+      "index": 1,
+      "account": "0xa9f710e0711122b95301ba81b860cb5fbdff0b45",
+      "amount_tokens": 10000,
+      "amount_wei": 10000000000000000000000,
+      "merkle_proof": [
+        "0x2f403f554b4904df24d58348b67ab0c3594dc7b66a6a7a6e00f635fc36af5d26",
+        "0x40a2fe092bb9205a65b45c4382d99168a1859025b34aecc6aba65bf1f27e1565",
+        "0x7f62316f321f1a26fa2dc99e014ae53ef8c159fe51ab5f7ad7407e433562e94a"
+      ]
+    },
+    "0x710bda43e60471b47376c67d142145b4bf37715b": {
+      "index": 2,
+      "account": "0x710bda43e60471b47376c67d142145b4bf37715b",
+      "amount_tokens": 8900,
+      "amount_wei": 8900000000000000000000,
+      "merkle_proof": [
+        "0x60c6d131a30bba040ba462e7400634530ea5c26d707476d1a3c50b485ef3a444",
+        "0x5fad059f4872b095e4fdd8834f6d5cc45eeb8cf9506178d88d23dab67637da19",
+        "0x7f62316f321f1a26fa2dc99e014ae53ef8c159fe51ab5f7ad7407e433562e94a"
+      ]
+    },
+    "0x4b48841d4b322d4b12e2f1059ca7154055c53792": {
+      "index": 3,
+      "account": "0x4b48841d4b322d4b12e2f1059ca7154055c53792",
+      "amount_tokens": 6300,
+      "amount_wei": 6300000000000000000000,
+      "merkle_proof": [
+        "0x8bacf57b2f383329dc1a6511fde4581857844601b1225e9bb5818097f925498c",
+        "0x5fad059f4872b095e4fdd8834f6d5cc45eeb8cf9506178d88d23dab67637da19",
+        "0x7f62316f321f1a26fa2dc99e014ae53ef8c159fe51ab5f7ad7407e433562e94a"
+      ]
+    },
+    "0x983110309620d911731ac0932219af06091b6744": {
+      "index": 4,
+      "account": "0x983110309620d911731ac0932219af06091b6744",
+      "amount_tokens": 2800,
+      "amount_wei": 2800000000000000000000,
+      "merkle_proof": [
+        "0x817332d53c45c937a3624b696e0730660640889af77227b011f27f5139b64be4",
+        "0xb10c2ea3ed35fe405b956ff803e472536586b27dfb42bd92ea21375d2ee467e6"
+      ]
+    },
+    "0x111111125421ca6dc452d289314280a0f8842a65": {
+      "index": 5,
+      "account": "0x111111125421ca6dc452d289314280a0f8842a65",
+      "amount_tokens": 2500,
+      "amount_wei": 2500000000000000000000,
+      "merkle_proof": [
+        "0xccf17a8f380386ec5c0c0e27dd2514cf7f1cc0ee7f52b99ab07b0b170e215394",
+        "0xb10c2ea3ed35fe405b956ff803e472536586b27dfb42bd92ea21375d2ee467e6"
+      ]
+    }
+  }
+}

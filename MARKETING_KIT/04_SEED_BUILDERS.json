@@ -1,0 +1,11 @@
+[
+  {"name": "Jesse Pollak", "handle": "jessepollak", "role": "Creator of Base"},
+  {"name": "Base Official", "handle": "base", "role": "Base Network Official"},
+  {"name": "Aerodrome Finance", "handle": "aerodromefi", "role": "Leading Base DEX"},
+  {"name": "Moonwell", "handle": "moonwell_fi", "role": "Base Lending Protocol"},
+  {"name": "Biconomy", "handle": "biconomy", "role": "Account Abstraction on Base"},
+  {"name": "Basenames", "handle": "basenames", "role": "Base Official ENS Domains"},
+  {"name": "Friendtech", "handle": "friendtech", "role": "Base SocialFi"},
+  {"name": "Seamless Protocol", "handle": "seamlessfi", "role": "Base Native DeFi"},
+  {"name": "Virtuals Protocol", "handle": "virtuals_io", "role": "AI Agents on Base"}
+]

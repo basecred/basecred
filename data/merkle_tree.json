@@ -1,0 +1,504 @@
+{
+  "merkle_root": "0x378f2877eb1e6041ce9f78904cbddf5b54ad8368cf0d6b731bd41959839fdfd5",
+  "token_symbol": "BASED",
+  "total_eligible_wallets": 6,
+  "total_tokens_allocated": 55000,
+  "records": {
+    "0xd8da6bf26964af9d7eed9e03e53415d37aa96045": {
+      "index": 0,
+      "account": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+      "amount_tokens": 10000,
+      "amount_wei": 10000000000000000000000,
+      "tier_name": "Tier 1: Base Pioneer & Whale",
+      "tier_level": 1,
+      "total_score": 1020,
+      "factors": {
+        "gas": {
+          "name": "Gas Fee Consumed",
+          "score": 250,
+          "max": 250,
+          "badge": "\ud83d\udd25 Gas Whale ($500+)",
+          "eth_gas": 0.3738,
+          "usd_gas": 990.57
+        },
+        "eth_age": {
+          "name": "Ethereum L1 Vintage",
+          "score": 250,
+          "max": 250,
+          "badge": "\ud83c\udfdb\ufe0f Ethereum OG (>3 Years)",
+          "days": 1288,
+          "years": 3.5,
+          "tx_count": 133
+        },
+        "base_activity": {
+          "name": "Base Activity & Nonce",
+          "score": 140,
+          "max": 300,
+          "badge": "\ud83d\udd39 Active Base User (20-49 Txs)",
+          "tx_count": 30,
+          "days": 258
+        },
+        "consistency": {
+          "name": "Multi-Month Consistency",
+          "score": 200,
+          "max": 200,
+          "badge": "\ud83d\udc8e High Consistency (8 Active Mos)",
+          "active_months": 8
+        },
+        "bridge": {
+          "name": "Official Base Bridge",
+          "score": 0,
+          "max": 150,
+          "badge": "\u274c No Official Bridge Interaction",
+          "used": false,
+          "bridged_eth": 0.0
+        },
+        "basename": {
+          "name": "Basename (.base.eth)",
+          "score": 0,
+          "max": 180,
+          "badge": "\u274c No Registered Basename",
+          "registered": false,
+          "name_label": null
+        },
+        "defi_protocols": {
+          "name": "Base Ecosystem Protocols",
+          "score": 180,
+          "max": 200,
+          "badge": "\u26a1 3 Protocols (Aerodrome Finance, Uniswap Base...)",
+          "protocols": [
+            "Aerodrome Finance",
+            "Uniswap Base",
+            "Friend.tech / Warpcast"
+          ]
+        },
+        "sybil_meter": {
+          "name": "Sybil Resistance Score",
+          "score": 100,
+          "max": 100,
+          "passed": true,
+          "flags": []
+        }
+      },
+      "is_eligible": true,
+      "merkle_proof": [
+        "0x57560040e7f72e5bd4c6808d6dfa8a6baa14bfd6209ad7f336e7aa5b6dc0edf2",
+        "0xef1a943a3e652d9c5b23efacf3f93ee9d60c1709a32ee129a4404d5ecd5cb156",
+        "0xd680b428116f2c9e0051c091a2c3ed81248da5a671ad3b26535f43e60ff206c6"
+      ]
+    },
+    "0x710bda43e60471b47376c67d142145b4bf37715b": {
+      "index": 1,
+      "account": "0x710bda43e60471b47376c67d142145b4bf37715b",
+      "amount_tokens": 10000,
+      "amount_wei": 10000000000000000000000,
+      "tier_name": "Tier 1: Base Pioneer & Whale",
+      "tier_level": 1,
+      "total_score": 1190,
+      "factors": {
+        "gas": {
+          "name": "Gas Fee Consumed",
+          "score": 250,
+          "max": 250,
+          "badge": "\ud83d\udd25 Gas Whale ($500+)",
+          "eth_gas": 0.2108,
+          "usd_gas": 558.62
+        },
+        "eth_age": {
+          "name": "Ethereum L1 Vintage",
+          "score": 160,
+          "max": 250,
+          "badge": "\ud83e\udd48 Layer 1 Veteran (1.5 - 3 Yrs)",
+          "days": 629,
+          "years": 1.7,
+          "tx_count": 74
+        },
+        "base_activity": {
+          "name": "Base Activity & Nonce",
+          "score": 220,
+          "max": 300,
+          "badge": "\ud83d\udd37 Base Pioneer (50-99 Txs)",
+          "tx_count": 81,
+          "days": 634
+        },
+        "consistency": {
+          "name": "Multi-Month Consistency",
+          "score": 200,
+          "max": 200,
+          "badge": "\ud83d\udc8e High Consistency (14 Active Mos)",
+          "active_months": 14
+        },
+        "bridge": {
+          "name": "Official Base Bridge",
+          "score": 0,
+          "max": 150,
+          "badge": "\u274c No Official Bridge Interaction",
+          "used": false,
+          "bridged_eth": 0.0
+        },
+        "basename": {
+          "name": "Basename (.base.eth)",
+          "score": 180,
+          "max": 180,
+          "badge": "\ud83c\udd94 Verified: user710b.base.eth",
+          "registered": true,
+          "name_label": "user710b.base.eth"
+        },
+        "defi_protocols": {
+          "name": "Base Ecosystem Protocols",
+          "score": 180,
+          "max": 200,
+          "badge": "\u26a1 3 Protocols (Aerodrome Finance, Uniswap Base...)",
+          "protocols": [
+            "Aerodrome Finance",
+            "Uniswap Base",
+            "Moonwell Lending"
+          ]
+        },
+        "sybil_meter": {
+          "name": "Sybil Resistance Score",
+          "score": 100,
+          "max": 100,
+          "passed": true,
+          "flags": []
+        }
+      },
+      "is_eligible": true,
+      "merkle_proof": [
+        "0xe773b05431f9d4f43453677c0d7c1b3837fd3ebf77d0df04c04c0a90998fdf05",
+        "0xef1a943a3e652d9c5b23efacf3f93ee9d60c1709a32ee129a4404d5ecd5cb156",
+        "0xd680b428116f2c9e0051c091a2c3ed81248da5a671ad3b26535f43e60ff206c6"
+      ]
+    },
+    "0x4b48841d4b322d4b12e2f1059ca7154055c53792": {
+      "index": 2,
+      "account": "0x4b48841d4b322d4b12e2f1059ca7154055c53792",
+      "amount_tokens": 10000,
+      "amount_wei": 10000000000000000000000,
+      "tier_name": "Tier 1: Base Pioneer & Whale",
+      "tier_level": 1,
+      "total_score": 1200,
+      "factors": {
+        "gas": {
+          "name": "Gas Fee Consumed",
+          "score": 180,
+          "max": 250,
+          "badge": "\u26a1 Heavy Gas Spender",
+          "eth_gas": 0.0813,
+          "usd_gas": 215.44
+        },
+        "eth_age": {
+          "name": "Ethereum L1 Vintage",
+          "score": 90,
+          "max": 250,
+          "badge": "\ud83e\udd49 Established Wallet (>6 Mos)",
+          "days": 313,
+          "years": 0.9,
+          "tx_count": 28
+        },
+        "base_activity": {
+          "name": "Base Activity & Nonce",
+          "score": 220,
+          "max": 300,
+          "badge": "\ud83d\udd37 Base Pioneer (50-99 Txs)",
+          "tx_count": 65,
+          "days": 588
+        },
+        "consistency": {
+          "name": "Multi-Month Consistency",
+          "score": 200,
+          "max": 200,
+          "badge": "\ud83d\udc8e High Consistency (14 Active Mos)",
+          "active_months": 14
+        },
+        "bridge": {
+          "name": "Official Base Bridge",
+          "score": 150,
+          "max": 150,
+          "badge": "\ud83c\udf09 Official Bridge (3.55 ETH)",
+          "used": true,
+          "bridged_eth": 3.55
+        },
+        "basename": {
+          "name": "Basename (.base.eth)",
+          "score": 180,
+          "max": 180,
+          "badge": "\ud83c\udd94 Verified: user4b48.base.eth",
+          "registered": true,
+          "name_label": "user4b48.base.eth"
+        },
+        "defi_protocols": {
+          "name": "Base Ecosystem Protocols",
+          "score": 180,
+          "max": 200,
+          "badge": "\u26a1 3 Protocols (Aerodrome Finance, Uniswap Base...)",
+          "protocols": [
+            "Aerodrome Finance",
+            "Uniswap Base",
+            "Moonwell Lending"
+          ]
+        },
+        "sybil_meter": {
+          "name": "Sybil Resistance Score",
+          "score": 100,
+          "max": 100,
+          "passed": true,
+          "flags": []
+        }
+      },
+      "is_eligible": true,
+      "merkle_proof": [
+        "0xe43c199aa1dc6f942a56cc50ccea887ed592b4829a48a76cc2132b54d0d1f0c4",
+        "0x4ae1d90902c62944453baf750a2933c26efc953485e21afa16758f7a04c6d988",
+        "0xd680b428116f2c9e0051c091a2c3ed81248da5a671ad3b26535f43e60ff206c6"
+      ]
+    },
+    "0x983110309620d911731ac0932219af06091b6744": {
+      "index": 3,
+      "account": "0x983110309620d911731ac0932219af06091b6744",
+      "amount_tokens": 10000,
+      "amount_wei": 10000000000000000000000,
+      "tier_name": "Tier 1: Base Pioneer & Whale",
+      "tier_level": 1,
+      "total_score": 1060,
+      "factors": {
+        "gas": {
+          "name": "Gas Fee Consumed",
+          "score": 180,
+          "max": 250,
+          "badge": "\u26a1 Heavy Gas Spender",
+          "eth_gas": 0.155,
+          "usd_gas": 410.75
+        },
+        "eth_age": {
+          "name": "Ethereum L1 Vintage",
+          "score": 160,
+          "max": 250,
+          "badge": "\ud83e\udd48 Layer 1 Veteran (1.5 - 3 Yrs)",
+          "days": 540,
+          "years": 1.5,
+          "tx_count": 55
+        },
+        "base_activity": {
+          "name": "Base Activity & Nonce",
+          "score": 140,
+          "max": 300,
+          "badge": "\ud83d\udd39 Active Base User (20-49 Txs)",
+          "tx_count": 22,
+          "days": 240
+        },
+        "consistency": {
+          "name": "Multi-Month Consistency",
+          "score": 130,
+          "max": 200,
+          "badge": "\ud83d\udcc5 Regular User (6 Active Mos)",
+          "active_months": 6
+        },
+        "bridge": {
+          "name": "Official Base Bridge",
+          "score": 150,
+          "max": 150,
+          "badge": "\ud83c\udf09 Official Bridge (0.15 ETH)",
+          "used": true,
+          "bridged_eth": 0.15
+        },
+        "basename": {
+          "name": "Basename (.base.eth)",
+          "score": 180,
+          "max": 180,
+          "badge": "\ud83c\udd94 Verified: user9831.base.eth",
+          "registered": true,
+          "name_label": "user9831.base.eth"
+        },
+        "defi_protocols": {
+          "name": "Base Ecosystem Protocols",
+          "score": 120,
+          "max": 200,
+          "badge": "\u26a1 2 Protocols (Aerodrome Finance, Uniswap Base)",
+          "protocols": [
+            "Aerodrome Finance",
+            "Uniswap Base"
+          ]
+        },
+        "sybil_meter": {
+          "name": "Sybil Resistance Score",
+          "score": 100,
+          "max": 100,
+          "passed": true,
+          "flags": []
+        }
+      },
+      "is_eligible": true,
+      "merkle_proof": [
+        "0x07a2145979bf0c881cf443334990d9a621456daa168b3e9a63d2addb6f65bf5a",
+        "0x4ae1d90902c62944453baf750a2933c26efc953485e21afa16758f7a04c6d988",
+        "0xd680b428116f2c9e0051c091a2c3ed81248da5a671ad3b26535f43e60ff206c6"
+      ]
+    },
+    "0x111111125421ca6dc452d289314280a0f8842a65": {
+      "index": 4,
+      "account": "0x111111125421ca6dc452d289314280a0f8842a65",
+      "amount_tokens": 10000,
+      "amount_wei": 10000000000000000000000,
+      "tier_name": "Tier 1: Base Pioneer & Whale",
+      "tier_level": 1,
+      "total_score": 1270,
+      "factors": {
+        "gas": {
+          "name": "Gas Fee Consumed",
+          "score": 250,
+          "max": 250,
+          "badge": "\ud83d\udd25 Gas Whale ($500+)",
+          "eth_gas": 0.2529,
+          "usd_gas": 670.19
+        },
+        "eth_age": {
+          "name": "Ethereum L1 Vintage",
+          "score": 90,
+          "max": 250,
+          "badge": "\ud83e\udd49 Established Wallet (>6 Mos)",
+          "days": 504,
+          "years": 1.4,
+          "tx_count": 89
+        },
+        "base_activity": {
+          "name": "Base Activity & Nonce",
+          "score": 220,
+          "max": 300,
+          "badge": "\ud83d\udd37 Base Pioneer (50-99 Txs)",
+          "tx_count": 81,
+          "days": 609
+        },
+        "consistency": {
+          "name": "Multi-Month Consistency",
+          "score": 200,
+          "max": 200,
+          "badge": "\ud83d\udc8e High Consistency (14 Active Mos)",
+          "active_months": 14
+        },
+        "bridge": {
+          "name": "Official Base Bridge",
+          "score": 150,
+          "max": 150,
+          "badge": "\ud83c\udf09 Official Bridge (1.35 ETH)",
+          "used": true,
+          "bridged_eth": 1.35
+        },
+        "basename": {
+          "name": "Basename (.base.eth)",
+          "score": 180,
+          "max": 180,
+          "badge": "\ud83c\udd94 Verified: user1111.base.eth",
+          "registered": true,
+          "name_label": "user1111.base.eth"
+        },
+        "defi_protocols": {
+          "name": "Base Ecosystem Protocols",
+          "score": 180,
+          "max": 200,
+          "badge": "\u26a1 3 Protocols (Aerodrome Finance, Uniswap Base...)",
+          "protocols": [
+            "Aerodrome Finance",
+            "Uniswap Base",
+            "Moonwell Lending"
+          ]
+        },
+        "sybil_meter": {
+          "name": "Sybil Resistance Score",
+          "score": 100,
+          "max": 100,
+          "passed": true,
+          "flags": []
+        }
+      },
+      "is_eligible": true,
+      "merkle_proof": [
+        "0x41129ff7a8be90b4cf954b3bd1ad1c6c916c142e9ab0796f1ac8cfc0832f8835",
+        "0x5fbdcb3caa63c50b31776875cf28fd9ad3073c1766b6f1f3917b63bc8ca849ea"
+      ]
+    },
+    "0x000000000000000000000000000000000000dead": {
+      "index": 5,
+      "account": "0x000000000000000000000000000000000000dead",
+      "amount_tokens": 5000,
+      "amount_wei": 5000000000000000000000,
+      "tier_name": "Tier 2: Core Ecosystem Pioneer",
+      "tier_level": 2,
+      "total_score": 910,
+      "factors": {
+        "gas": {
+          "name": "Gas Fee Consumed",
+          "score": 100,
+          "max": 250,
+          "badge": "\u26fd Active Gas Spender",
+          "eth_gas": 0.0425,
+          "usd_gas": 112.63
+        },
+        "eth_age": {
+          "name": "Ethereum L1 Vintage",
+          "score": 90,
+          "max": 250,
+          "badge": "\ud83e\udd49 Established Wallet (>6 Mos)",
+          "days": 200,
+          "years": 0.5,
+          "tx_count": 15
+        },
+        "base_activity": {
+          "name": "Base Activity & Nonce",
+          "score": 60,
+          "max": 300,
+          "badge": "\ud83d\udd39 Base Explorer (5-19 Txs)",
+          "tx_count": 12,
+          "days": 150
+        },
+        "consistency": {
+          "name": "Multi-Month Consistency",
+          "score": 130,
+          "max": 200,
+          "badge": "\ud83d\udcc5 Regular User (5 Active Mos)",
+          "active_months": 5
+        },
+        "bridge": {
+          "name": "Official Base Bridge",
+          "score": 150,
+          "max": 150,
+          "badge": "\ud83c\udf09 Official Bridge (0.05 ETH)",
+          "used": true,
+          "bridged_eth": 0.05
+        },
+        "basename": {
+          "name": "Basename (.base.eth)",
+          "score": 180,
+          "max": 180,
+          "badge": "\ud83c\udd94 Verified: user0000.base.eth",
+          "registered": true,
+          "name_label": "user0000.base.eth"
+        },
+        "defi_protocols": {
+          "name": "Base Ecosystem Protocols",
+          "score": 200,
+          "max": 200,
+          "badge": "\u26a1 4 Protocols (Aerodrome Finance, Uniswap Base...)",
+          "protocols": [
+            "Aerodrome Finance",
+            "Uniswap Base",
+            "Moonwell Lending",
+            "Friend.tech / Warpcast"
+          ]
+        },
+        "sybil_meter": {
+          "name": "Sybil Resistance Score",
+          "score": 100,
+          "max": 100,
+          "passed": true,
+          "flags": []
+        }
+      },
+      "is_eligible": true,
+      "merkle_proof": [
+        "0x12c6b2df02753bf447ed2ec87f47bd75eb7011e3d09807135bb7b6e0dd363127",
+        "0x5fbdcb3caa63c50b31776875cf28fd9ad3073c1766b6f1f3917b63bc8ca849ea"
+      ]
+    }
+  }
+}
