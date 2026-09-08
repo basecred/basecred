@@ -65,6 +65,7 @@ BaseCred is 100% open-source, built on @base.
 
 Check your on-chain footprint, claim your Weekly Spotlight Pass, and back the best builders on Base:
 
-👉 [YOUR_LIVE_URL_HERE]
+👉 Explore Live: https://basecred.onrender.com
+🐙 Open Source: https://github.com/basecred/basecred
 
-Drop your Base address or Basename below for an initial pass boost! 🔵
+Drop your Base address or Basename (.base.eth) below for an initial pass boost! 🔵
