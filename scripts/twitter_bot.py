@@ -72,7 +72,7 @@ def process_single_tweet(tweet_id: str, sender_handle: str, tweet_text: str) -> 
     conn.close()
 
     if not sender_row:
-        reply = f"@{sender_handle} ⚠️ Your X account is not linked to an evaluated Base wallet yet. Visit basecred.xyz to audit your footprint and claim your Weekly Spotlight Pass!"
+        reply = f"@{sender_handle} ⚠️ Your X account is not linked to an evaluated Base wallet yet. Visit https://basecred.onrender.com to audit your footprint and claim your Weekly Spotlight Pass!"
         print(f"Unregistered: {reply}")
         return {"processed": False, "reply": reply}
 
@@ -91,7 +91,7 @@ def process_single_tweet(tweet_id: str, sender_handle: str, tweet_text: str) -> 
         )
 
         if res["success"]:
-            reply = f"🌟 @{sender_handle} endorsed @{creator} in the Weekly Base Spotlight! +1000 Creator / +300 Curator $CRED recorded. 1/1 Pass used for {res['epoch']}. Leaderboard: basecred.xyz"
+            reply = f"🌟 @{sender_handle} endorsed @{creator} in the Weekly Base Spotlight! +1000 Creator / +300 Curator $CRED recorded. 1/1 Pass used for {res['epoch']}. Leaderboard: https://basecred.onrender.com"
             print(f"Spotlight Success: {reply}")
         else:
             reply = f"❌ @{sender_handle} Spotlight endorsement failed: {res['error']}"
