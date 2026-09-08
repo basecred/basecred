@@ -1,0 +1,2 @@
+# BaseCred Runtime Dependencies
+# Designed with zero external dependencies for maximum security and instant cold starts
