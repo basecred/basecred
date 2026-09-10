@@ -80,15 +80,17 @@
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <style>
-    /* Authentic Base Network Clean Dark Theme (No generic AI purple/neon meshes) */
+    /* Authentic Base Network Clean Dark Theme matching the header banner lighting */
     body {
       background-color: #06080C;
       color: #F1F5F9;
       background-image: 
+        radial-gradient(at 0% 0%, rgba(0, 82, 255, 0.16) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(0, 82, 255, 0.12) 0px, transparent 50%),
         radial-gradient(circle at 50% -20%, rgba(0, 82, 255, 0.15) 0%, transparent 55%),
         linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
         linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
-      background-size: 100% 100%, 32px 32px, 32px 32px;
+      background-size: 100% 100%, 100% 100%, 100% 100%, 32px 32px, 32px 32px;
       background-attachment: fixed;
     }
 
@@ -157,10 +159,7 @@
         <div class="flex items-center gap-3">
           <!-- Official Base Circle Mark -->
           <div class="relative flex items-center justify-center">
-            <div class="base-logo-glyph">
-              <!-- Inner subtle ring for authentic coin aesthetic -->
-              <div class="w-3.5 h-3.5 rounded-full border-2 border-white/90"></div>
-            </div>
+            <img src="./avatar.jpg" alt="BaseCred" class="w-8 h-8 rounded-full border border-base/40 shadow-base-sm object-cover">
           </div>
           <div>
             <div class="flex items-center gap-2">
@@ -220,6 +219,22 @@
     <!-- ================================================================= -->
     <div id="tabFootprintContent" class="space-y-8 animate-fadeIn">
       
+      <!-- Minimalist Base Header Showcase (Aligned with Twitter Visual Identity) -->
+      <div class="relative w-full max-w-4xl mx-auto rounded-2xl overflow-hidden border border-[#1E2533] shadow-base-md group">
+        <img src="./banner.jpg" alt="BaseCred Protocol Header" class="w-full h-36 sm:h-52 md:h-60 object-cover transform transition-transform duration-700 group-hover:scale-[1.01]">
+        <div class="absolute inset-0 bg-gradient-to-t from-[#06080C] via-transparent to-transparent opacity-80"></div>
+        <div class="absolute bottom-3 left-4 right-4 flex items-center justify-between text-xs text-slate-300">
+          <span class="flex items-center gap-2 px-2.5 py-1 rounded-lg bg-[#06080C]/80 backdrop-blur-md border border-[#1E2533] font-mono text-[11px]">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>Protocol Live on Base (8453)</span>
+          </span>
+          <span class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#06080C]/80 backdrop-blur-md border border-[#1E2533] font-mono text-[11px] text-blue-400 font-bold">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+            <span>100M $CRED Genesis Pool</span>
+          </span>
+        </div>
+      </div>
+
       <!-- Hero Section: Clean, Authoritative On-Chain Header -->
       <section class="text-center max-w-3xl mx-auto space-y-4 pt-2">
         <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-base/10 border border-base/30 text-xs font-bold text-blue-400">
