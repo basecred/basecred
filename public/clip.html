@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BaseCred Explainer Video Generator</title>
+  <title>BaseCred Explainer Video Studio</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet">
   <style>
     body {
       background-color: #04060A;
@@ -15,47 +15,95 @@
       font-family: 'Plus Jakarta Sans', sans-serif;
     }
     .mono { font-family: 'JetBrains Mono', monospace; }
+    input[type=range]::-webkit-slider-thumb {
+      background: #0052FF;
+      cursor: pointer;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 2px solid #FFFFFF;
+    }
   </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 select-none">
+<body class="min-h-screen flex flex-col items-center justify-center p-3 sm:p-6 select-none">
 
-  <!-- Control Header -->
-  <div class="max-w-4xl w-full flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">
-    <div>
-      <div class="flex items-center gap-2">
-        <div class="w-3 h-3 rounded-full bg-[#0052FF]"></div>
-        <h1 class="text-lg font-bold text-white tracking-tight">BaseCred ($CRED) Explainer Video Studio</h1>
+  <!-- Top Studio Control Bar -->
+  <div class="max-w-5xl w-full flex flex-col sm:flex-row items-center justify-between gap-3 mb-3">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-[#0052FF]/20 border border-[#0052FF]/40 flex items-center justify-center shadow-lg shadow-[#0052FF]/20">
+        <div class="w-4 h-4 rounded-full bg-[#0052FF] animate-pulse"></div>
       </div>
-      <p class="text-xs text-slate-400 mt-0.5">15-Second High-Impact Motion Graphics Video for Twitter / X</p>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="text-base font-extrabold text-white tracking-tight">BaseCred ($CRED) Explainer Studio</h1>
+          <span class="px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-[10px] font-mono text-blue-400 font-bold">1080p / 720p HD</span>
+        </div>
+        <p class="text-xs text-slate-400">15-Second Motion-Graphics Explainer for X (Twitter) Video</p>
+      </div>
     </div>
 
-    <div class="flex items-center gap-3">
-      <button id="playBtn" onclick="startPlayback()" class="px-4 py-2 rounded-xl bg-[#131822] hover:bg-[#1A2230] border border-[#1E2533] text-xs font-bold text-white transition flex items-center gap-2">
-        <span>▶ Replay</span>
+    <!-- Main Action Buttons -->
+    <div class="flex items-center gap-2">
+      <button id="playBtn" onclick="togglePlay()" class="px-3.5 py-2 rounded-xl bg-[#111622] hover:bg-[#1A2234] border border-[#1E273A] text-xs font-bold text-white transition flex items-center gap-1.5 active:scale-95 shadow-sm">
+        <span id="playIcon">⏸</span>
+        <span id="playBtnText">Pause</span>
       </button>
 
-      <button id="recordBtn" onclick="recordAndExport()" class="px-5 py-2 rounded-xl bg-[#0052FF] hover:bg-[#0045D8] text-white text-xs font-extrabold transition shadow-lg flex items-center gap-2 active:scale-95">
-        <span id="recordIcon" class="w-2.5 h-2.5 rounded-full bg-red-400 animate-pulse"></span>
-        <span id="recordBtnText">⬇ Record & Download Video</span>
+      <button onclick="downloadSnapshot()" class="px-3.5 py-2 rounded-xl bg-[#111622] hover:bg-[#1A2234] border border-[#1E273A] text-xs font-bold text-slate-300 transition flex items-center gap-1.5 active:scale-95 shadow-sm">
+        <span>📸</span>
+        <span>Snapshot</span>
       </button>
+
+      <button id="recordBtn" onclick="recordAndExport()" class="px-4 py-2 rounded-xl bg-[#0052FF] hover:bg-[#0045D8] text-white text-xs font-extrabold transition shadow-lg shadow-[#0052FF]/25 flex items-center gap-2 active:scale-95">
+        <span id="recordDot" class="w-2.5 h-2.5 rounded-full bg-red-400 animate-pulse"></span>
+        <span id="recordBtnText">⬇ Record & Download</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Scene Navigation Quick Bar -->
+  <div class="max-w-5xl w-full flex items-center justify-between gap-1.5 mb-3 px-2 py-1.5 rounded-xl bg-[#0A0E17] border border-[#171F2F] text-xs">
+    <span class="text-[11px] font-mono text-slate-400 pl-1 hidden sm:inline">Jump to Scene:</span>
+    <div class="flex items-center gap-1.5 flex-wrap">
+      <button onclick="jumpTo(0)" class="px-2.5 py-1 rounded-lg bg-[#111622] hover:bg-[#1E273A] text-slate-300 text-[11px] font-semibold border border-[#1E273A] transition">
+        Scene 1: Hook (0s)
+      </button>
+      <button onclick="jumpTo(3.5)" class="px-2.5 py-1 rounded-lg bg-[#111622] hover:bg-[#1E273A] text-slate-300 text-[11px] font-semibold border border-[#1E273A] transition">
+        Scene 2: 8 Factors (3.5s)
+      </button>
+      <button onclick="jumpTo(7.5)" class="px-2.5 py-1 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 text-[11px] font-semibold border border-amber-500/30 transition">
+        Scene 3: Spotlight & 2.0x (7.5s)
+      </button>
+      <button onclick="jumpTo(11.5)" class="px-2.5 py-1 rounded-lg bg-[#111622] hover:bg-[#1E273A] text-slate-300 text-[11px] font-semibold border border-[#1E273A] transition">
+        Scene 4: Launch CTA (11.5s)
+      </button>
+    </div>
+    <div class="flex items-center gap-2 pr-1 font-mono text-xs">
+      <span id="timeLabel" class="text-blue-400 font-bold">0.0s</span>
+      <span class="text-slate-600">/ 15.0s</span>
     </div>
   </div>
 
   <!-- Video Canvas Container (16:9 1280x720 HD) -->
-  <div class="relative max-w-4xl w-full aspect-video bg-[#06080C] rounded-2xl overflow-hidden border border-[#1E2533] shadow-2xl flex items-center justify-center">
+  <div class="relative max-w-5xl w-full aspect-video bg-[#06080C] rounded-2xl overflow-hidden border border-[#1E2535] shadow-2xl flex items-center justify-center">
     <canvas id="videoCanvas" width="1280" height="720" class="w-full h-full object-contain"></canvas>
     
     <!-- Recording progress overlay -->
-    <div id="recordingBadge" class="hidden absolute top-4 right-4 px-3 py-1.5 rounded-lg bg-red-500/20 border border-red-500/40 text-red-400 text-xs font-mono font-bold flex items-center gap-2">
-      <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+    <div id="recordingBadge" class="hidden absolute top-4 right-4 px-3.5 py-2 rounded-xl bg-red-950/80 border border-red-500/60 text-red-300 text-xs font-mono font-bold flex items-center gap-2.5 backdrop-blur-md shadow-xl">
+      <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
       <span id="recordStatus">Rendering Video (60 FPS)...</span>
     </div>
   </div>
 
-  <!-- Instructions note below -->
-  <div class="max-w-4xl w-full mt-4 text-center text-xs text-slate-500 flex items-center justify-between">
-    <span>HD 1280×720 • Optimized for X/Twitter Video Uploads</span>
-    <span class="mono">Duration: 15s • Codec: MP4 / WebM</span>
+  <!-- Timeline Interactive Scrubber -->
+  <div class="max-w-5xl w-full mt-3 flex items-center gap-3 px-1">
+    <input type="range" id="timeScrubber" min="0" max="15" step="0.05" value="0" oninput="onScrub(this.value)" class="w-full h-1.5 bg-[#171F2F] rounded-lg appearance-none cursor-pointer">
+  </div>
+
+  <!-- Footer Info -->
+  <div class="max-w-5xl w-full mt-2 text-center text-[11px] text-slate-500 flex items-center justify-between px-1">
+    <span>HD 1280×720 • 60 FPS • Perfectly optimized for X/Twitter Video uploads</span>
+    <span class="mono">Open Source Protocol on Base (8453)</span>
   </div>
 
   <script>
@@ -65,36 +113,52 @@
     const H = canvas.height;
 
     let startTime = 0;
+    let pausedTime = 0;
     let isPlaying = false;
     let animationId = null;
     let isRecording = false;
 
-    // Load logo image if available
-    const logoImg = new Image();
-    logoImg.src = './avatar.jpg';
-
     // Total Duration: 15 Seconds
     const TOTAL_DURATION = 15.0;
 
-    // Star/Particle network
+    // Animated particles background
     const particles = [];
-    for (let i = 0; i < 40; i++) {
+    for (let i = 0; i < 45; i++) {
       particles.push({
         x: Math.random() * W,
         y: Math.random() * H,
-        vx: (Math.random() - 0.5) * 0.8,
-        vy: (Math.random() - 0.5) * 0.8,
-        r: Math.random() * 2 + 1
+        vx: (Math.random() - 0.5) * 0.6,
+        vy: (Math.random() - 0.5) * 0.6,
+        r: Math.random() * 2 + 1,
+        alpha: Math.random() * 0.5 + 0.2
       });
     }
 
+    // Easing helpers
+    function easeOutCubic(x) {
+      return 1 - Math.pow(1 - x, 3);
+    }
+
+    function easeInOutQuad(x) {
+      return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
+    }
+
     function render(timeSec) {
+      // Keep within bounds
+      timeSec = Math.max(0, Math.min(TOTAL_DURATION, timeSec));
+
+      // Update UI elements
+      document.getElementById('timeLabel').textContent = timeSec.toFixed(1) + 's';
+      if (!isRecording) {
+        document.getElementById('timeScrubber').value = timeSec;
+      }
+
       // Clear screen
-      ctx.fillStyle = '#06080C';
+      ctx.fillStyle = '#05070B';
       ctx.fillRect(0, 0, W, H);
 
-      // 1. Background Grid & Particles
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+      // 1. Sleek Background Grid
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.025)';
       ctx.lineWidth = 1;
       const gridSize = 48;
       for (let x = 0; x < W; x += gridSize) {
@@ -110,28 +174,22 @@
         ctx.stroke();
       }
 
-      // Corner Ambient Glow
-      const glowGrad = ctx.createRadialGradient(0, 0, 10, 0, 0, 500);
-      glowGrad.addColorStop(0, 'rgba(0, 82, 255, 0.25)');
+      // Corner Ambient Glows
+      const glowGrad = ctx.createRadialGradient(0, 0, 10, 0, 0, 520);
+      glowGrad.addColorStop(0, 'rgba(0, 82, 255, 0.28)');
       glowGrad.addColorStop(1, 'transparent');
       ctx.fillStyle = glowGrad;
       ctx.fillRect(0, 0, W, H);
 
-      const glowGrad2 = ctx.createRadialGradient(W, H, 10, W, H, 600);
-      glowGrad2.addColorStop(0, 'rgba(0, 82, 255, 0.18)');
+      const glowGrad2 = ctx.createRadialGradient(W, H, 10, W, H, 650);
+      glowGrad2.addColorStop(0, 'rgba(0, 82, 255, 0.20)');
       glowGrad2.addColorStop(1, 'transparent');
       ctx.fillStyle = glowGrad2;
       ctx.fillRect(0, 0, W, H);
 
       // Particle dots
-      ctx.fillStyle = 'rgba(0, 82, 255, 0.6)';
       particles.forEach(p => {
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < 0) p.x = W;
-        if (p.x > W) p.x = 0;
-        if (p.y < 0) p.y = H;
-        if (p.y > H) p.y = 0;
+        ctx.fillStyle = `rgba(0, 100, 255, ${p.alpha})`;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fill();
@@ -139,16 +197,16 @@
 
       // Top Progress Bar
       const progress = Math.min(1.0, timeSec / TOTAL_DURATION);
-      ctx.fillStyle = '#1E2533';
+      ctx.fillStyle = '#171F2F';
       ctx.fillRect(0, 0, W, 4);
       ctx.fillStyle = '#0052FF';
       ctx.fillRect(0, 0, W * progress, 4);
 
       // Timeline Scenes:
-      // Scene 1: (0.0s - 3.5s) The Hook & The Problem
-      // Scene 2: (3.5s - 7.5s) 8-Factor Footprint Engine
-      // Scene 3: (7.5s - 11.5s) Weekly Spotlight & 2x Multiplier
-      // Scene 4: (11.5s - 15.0s) P2P Market & TGE Launch
+      // Scene 1: (0.0s - 3.5s) The Hook & Sybil Problem
+      // Scene 2: (3.5s - 7.5s) 8-Factor Footprint Engine & Score
+      // Scene 3: (7.5s - 11.5s) Weekly Spotlight & 2.0x Multiplier
+      // Scene 4: (11.5s - 15.0s) P2P Pass Market & Launch CTA
 
       if (timeSec < 3.5) {
         drawScene1(timeSec);
@@ -166,109 +224,172 @@
 
     function drawHeaderWatermark() {
       ctx.save();
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-      ctx.font = '600 14px "JetBrains Mono"';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+      ctx.font = '700 13px "JetBrains Mono"';
       ctx.textAlign = 'right';
-      ctx.fillText('BASE MAINNET • CHAIN 8453', W - 40, 45);
+      ctx.fillText('BASE MAINNET • CHAIN 8453', W - 45, 45);
 
       ctx.textAlign = 'left';
       ctx.fillStyle = '#0052FF';
       ctx.beginPath();
-      ctx.arc(46, 40, 6, 0, Math.PI * 2);
+      ctx.arc(46, 40, 7, 0, Math.PI * 2);
       ctx.fill();
 
       ctx.fillStyle = '#FFFFFF';
-      ctx.font = '800 16px "Plus Jakarta Sans"';
+      ctx.font = '800 17px "Plus Jakarta Sans"';
       ctx.fillText('BaseCred ($CRED)', 62, 45);
       ctx.restore();
     }
 
-    // SCENE 1: THE HOOK
+    // ==========================================
+    // SCENE 1: THE HOOK & SYBIL PROBLEM (0s - 3.5s)
+    // ==========================================
     function drawScene1(t) {
       ctx.save();
-      const fadeIn = Math.min(1, t * 1.5);
-      ctx.globalAlpha = fadeIn;
+      const enterProgress = easeOutCubic(Math.min(1, t * 1.6));
+      ctx.globalAlpha = enterProgress;
 
-      // Badge
-      ctx.fillStyle = 'rgba(0, 82, 255, 0.15)';
-      roundRect(ctx, W/2 - 160, 160, 320, 36, 18);
+      // Top Category Pill
+      ctx.fillStyle = 'rgba(0, 82, 255, 0.16)';
+      roundRect(ctx, W/2 - 165, 140, 330, 36, 18);
       ctx.fill();
-      ctx.strokeStyle = 'rgba(0, 82, 255, 0.4)';
+      ctx.strokeStyle = 'rgba(0, 82, 255, 0.5)';
+      ctx.lineWidth = 1.5;
       ctx.stroke();
 
       ctx.fillStyle = '#60A5FA';
-      ctx.font = '700 12px "JetBrains Mono"';
+      ctx.font = '800 12px "JetBrains Mono"';
       ctx.textAlign = 'center';
-      ctx.fillText('THE ON-CHAIN REPUTATION PROTOCOL', W/2, 183);
+      ctx.fillText('THE ON-CHAIN REPUTATION PROTOCOL', W/2, 163);
 
-      // Main Title
-      ctx.fillStyle = '#FFFFFF';
+      // Main Headlines
+      ctx.fillStyle = '#F8FAFC';
       ctx.font = '900 48px "Plus Jakarta Sans"';
-      ctx.fillText('Most airdrops are farmed by bots.', W/2, 260);
+      ctx.fillText('Most airdrops are farmed by bots.', W/2, 235);
 
       ctx.fillStyle = '#0052FF';
       ctx.font = '900 52px "Plus Jakarta Sans"';
-      ctx.fillText('Base deserves better.', W/2, 330);
+      ctx.fillText('Base deserves better.', W/2, 305);
 
       // Subtitle
       ctx.fillStyle = '#94A3B8';
       ctx.font = '500 20px "Plus Jakarta Sans"';
-      ctx.fillText('Introducing verifiable on-chain footprint scoring on Base L2.', W/2, 400);
+      ctx.fillText('Introducing verifiable on-chain footprint scoring on Base L2.', W/2, 365);
 
-      // Big Coin Icon Center
-      const scale = 1 + Math.sin(t * 3) * 0.05;
-      ctx.translate(W/2, 530);
+      // Centerpiece: Dynamic Base Coin with Radiating Glow
+      const coinY = 500;
+      const pulse = (t * 2.5) % 2;
+      
+      // Outer Radiating Wave
+      ctx.beginPath();
+      ctx.arc(W/2, coinY, 65 + pulse * 28, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(0, 82, 255, ${Math.max(0, 0.4 - pulse * 0.2)})`;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Main Coin Body
+      const scale = 1 + Math.sin(t * 3.5) * 0.03;
+      ctx.save();
+      ctx.translate(W/2, coinY);
       ctx.scale(scale, scale);
 
+      // Drop shadow for coin
+      ctx.shadowColor = 'rgba(0, 82, 255, 0.6)';
+      ctx.shadowBlur = 30;
+
       ctx.beginPath();
-      ctx.arc(0, 0, 64, 0, Math.PI * 2);
-      ctx.fillStyle = '#0052FF';
+      ctx.arc(0, 0, 60, 0, Math.PI * 2);
+      const coinGrad = ctx.createLinearGradient(-60, -60, 60, 60);
+      coinGrad.addColorStop(0, '#0052FF');
+      coinGrad.addColorStop(1, '#002B8A');
+      ctx.fillStyle = coinGrad;
       ctx.fill();
-      ctx.lineWidth = 4;
+      ctx.lineWidth = 3;
       ctx.strokeStyle = '#FFFFFF';
       ctx.stroke();
 
+      // Inner Coin Emblem
+      ctx.shadowBlur = 0;
       ctx.beginPath();
-      ctx.arc(0, 0, 36, 0, Math.PI * 2);
-      ctx.lineWidth = 3;
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+      ctx.arc(0, 0, 32, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
+      ctx.lineWidth = 3.5;
       ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(0, 0, 12, 0, Math.PI * 2);
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fill();
+      ctx.restore();
+
+      // Flanking Proof Badges
+      // Left Badge: Sybil Warning
+      ctx.fillStyle = '#0F1420';
+      roundRect(ctx, W/2 - 280, coinY - 22, 175, 44, 12);
+      ctx.fill();
+      ctx.strokeStyle = '#EF4444';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+      ctx.fillStyle = '#F87171';
+      ctx.font = '700 13px "Plus Jakarta Sans"';
+      ctx.textAlign = 'center';
+      ctx.fillText('🚫 0 Sybil Tolerance', W/2 - 192, coinY + 5);
+
+      // Right Badge: Human Proof
+      ctx.fillStyle = '#0F1420';
+      roundRect(ctx, W/2 + 105, coinY - 22, 175, 44, 12);
+      ctx.fill();
+      ctx.strokeStyle = '#10B981';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+      ctx.fillStyle = '#34D399';
+      ctx.font = '700 13px "Plus Jakarta Sans"';
+      ctx.textAlign = 'center';
+      ctx.fillText('🛡️ Real Human Proof', W/2 + 192, coinY + 5);
+
+      // Bottom sub-pill
+      ctx.fillStyle = '#64748B';
+      ctx.font = '600 13px "JetBrains Mono"';
+      ctx.fillText('Chain ID: 8453 • Merkle-Root Provable Airdrops', W/2, 605);
+
       ctx.restore();
     }
 
-    // SCENE 2: 8-FACTOR FOOTPRINT
+    // ==========================================
+    // SCENE 2: 8-FACTOR FOOTPRINT ENGINE (3.5s - 7.5s)
+    // ==========================================
     function drawScene2(t) {
       ctx.save();
-      const fadeIn = Math.min(1, t * 2);
-      ctx.globalAlpha = fadeIn;
+      const enterProgress = easeOutCubic(Math.min(1, t * 1.8));
+      ctx.globalAlpha = enterProgress;
 
       ctx.textAlign = 'center';
       ctx.fillStyle = '#38BDF8';
-      ctx.font = '700 13px "JetBrains Mono"';
-      ctx.fillText('PILLAR 1 • PROVABLE ON-CHAIN FOOTPRINT', W/2, 130);
+      ctx.font = '800 13px "JetBrains Mono"';
+      ctx.fillText('PILLAR 1 • PROVABLE ON-CHAIN FOOTPRINT', W/2, 120);
 
       ctx.fillStyle = '#FFFFFF';
-      ctx.font = '900 40px "Plus Jakarta Sans"';
-      ctx.fillText('8 Verifiable On-Chain Factors', W/2, 180);
+      ctx.font = '900 42px "Plus Jakarta Sans"';
+      ctx.fillText('8 Verifiable On-Chain Criteria', W/2, 168);
 
       // 8 Factor Grid Cards
       const factors = [
-        { icon: '⛽', title: 'Gas Burnt', val: '0.185 ETH' },
-        { icon: '🏛️', title: 'L1 Vintage', val: '3.2 Years' },
-        { icon: '🔷', title: 'Base Nonce', val: '148 Txs' },
-        { icon: '📅', title: 'Consistency', val: '10 Months' },
-        { icon: '🌉', title: 'Portal Bridge', val: 'Verified' },
-        { icon: '🆔', title: 'Basename', val: '.base.eth' },
-        { icon: '⚡', title: 'Base DeFi', val: '4 Protocols' },
-        { icon: '🛡️', title: 'Sybil Health', val: '95% Human' },
+        { icon: '⛽', title: 'Gas Burnt', val: '0.185 ETH', note: 'Base Activity' },
+        { icon: '🏛️', title: 'L1 Vintage', val: '3.2 Years', note: 'ETH Mainnet' },
+        { icon: '🔷', title: 'Base Nonce', val: '148 Txs', note: 'High Engagement' },
+        { icon: '📅', title: 'Consistency', val: '10 Months', note: 'Monthly Active' },
+        { icon: '🌉', title: 'Portal Bridge', val: 'Verified', note: 'Official Bridge' },
+        { icon: '🆔', title: 'Basename', val: '.base.eth', note: 'Identity Holder' },
+        { icon: '⚡', title: 'Base DeFi', val: '4 Protocols', note: 'Aerodrome/Uni' },
+        { icon: '🛡️', title: 'Sybil Health', val: '96% Human', note: 'Graph Verified' },
       ];
 
-      const startX = 140;
-      const startY = 240;
-      const cardW = 230;
-      const cardH = 95;
-      const gapX = 25;
-      const gapY = 25;
+      const startX = 138;
+      const startY = 210;
+      const cardW = 236;
+      const cardH = 96;
+      const gapX = 20;
+      const gapY = 20;
 
       factors.forEach((f, idx) => {
         const col = idx % 4;
@@ -276,147 +397,348 @@
         const x = startX + col * (cardW + gapX);
         const y = startY + row * (cardH + gapY);
 
-        const cardProgress = Math.min(1, Math.max(0, (t - idx * 0.15) * 3));
+        // Staggered smooth entrance
+        const cardProgress = easeOutCubic(Math.min(1, Math.max(0, (t - idx * 0.12) * 2.5)));
+        const offsetY = (1 - cardProgress) * 16;
+
         ctx.save();
         ctx.globalAlpha = cardProgress;
 
-        ctx.fillStyle = '#0F131A';
-        roundRect(ctx, x, y, cardW, cardH, 14);
+        ctx.fillStyle = '#0C101A';
+        roundRect(ctx, x, y + offsetY, cardW, cardH, 14);
         ctx.fill();
-        ctx.strokeStyle = idx === 7 ? '#10B981' : '#1E2533';
-        ctx.lineWidth = 1.5;
+
+        // Highlight Sybil Health with green border
+        ctx.strokeStyle = idx === 7 ? '#10B981' : '#1D2536';
+        ctx.lineWidth = idx === 7 ? 2 : 1.5;
         ctx.stroke();
 
+        // Status indicator dot
+        ctx.fillStyle = idx === 7 ? '#10B981' : '#38BDF8';
+        ctx.beginPath();
+        ctx.arc(x + cardW - 18, y + offsetY + 18, 4, 0, Math.PI * 2);
+        ctx.fill();
+
         ctx.textAlign = 'left';
-        ctx.font = '22px sans-serif';
-        ctx.fillText(f.icon, x + 16, y + 42);
+        ctx.font = '24px sans-serif';
+        ctx.fillText(f.icon, x + 16, y + offsetY + 42);
 
         ctx.font = '700 13px "Plus Jakarta Sans"';
         ctx.fillStyle = '#94A3B8';
-        ctx.fillText(f.title, x + 52, y + 36);
+        ctx.fillText(f.title, x + 54, y + offsetY + 34);
 
-        ctx.font = '800 18px "JetBrains Mono"';
+        ctx.font = '800 17px "JetBrains Mono"';
         ctx.fillStyle = idx === 7 ? '#34D399' : '#FFFFFF';
-        ctx.fillText(f.val, x + 52, y + 68);
+        ctx.fillText(f.val, x + 54, y + offsetY + 62);
+
+        ctx.font = '600 10px "JetBrains Mono"';
+        ctx.fillStyle = '#64748B';
+        ctx.fillText(f.note, x + 54, y + offsetY + 80);
+
         ctx.restore();
       });
 
-      // Total Score Counter at bottom
-      const scoreCount = Math.floor(Math.min(1020, t * 500));
-      ctx.textAlign = 'center';
+      // Bottom Total Score Container & Animated Progress Bar
+      const scoreT = Math.min(1, Math.max(0, (t - 1.2) * 0.9));
+      const scoreCount = Math.floor(scoreT * 1020);
+
+      const scoreBoxW = 860;
+      const scoreBoxH = 68;
+      const scoreBoxX = W/2 - scoreBoxW/2;
+      const scoreBoxY = 475;
+
+      ctx.fillStyle = '#0A0E17';
+      roundRect(ctx, scoreBoxX, scoreBoxY, scoreBoxW, scoreBoxH, 14);
+      ctx.fill();
+      ctx.strokeStyle = '#0052FF';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      ctx.textAlign = 'left';
       ctx.fillStyle = '#FFFFFF';
-      ctx.font = '800 22px "JetBrains Mono"';
-      ctx.fillText(`Audited Score: ${scoreCount} / 1500 (Tier 1: Base Pioneer)`, W/2, 520);
+      ctx.font = '800 16px "Plus Jakarta Sans"';
+      ctx.fillText('Audited Footprint Score:', scoreBoxX + 24, scoreBoxY + 30);
+
+      ctx.font = '800 18px "JetBrains Mono"';
+      ctx.fillStyle = '#38BDF8';
+      ctx.fillText(`${scoreCount} / 1500 pts`, scoreBoxX + 230, scoreBoxY + 30);
+
+      // Tier Badge Right
+      ctx.textAlign = 'right';
+      ctx.font = '800 13px "JetBrains Mono"';
+      ctx.fillStyle = '#10B981';
+      ctx.fillText('★ TIER 1: BASE PIONEER (TOP 5%)', scoreBoxX + scoreBoxW - 24, scoreBoxY + 30);
+
+      // Score Progress Bar Track
+      const trackW = scoreBoxW - 48;
+      ctx.fillStyle = '#171F2F';
+      roundRect(ctx, scoreBoxX + 24, scoreBoxY + 44, trackW, 8, 4);
+      ctx.fill();
+
+      // Score Progress Fill
+      const fillW = trackW * (scoreCount / 1500);
+      if (fillW > 0) {
+        const barGrad = ctx.createLinearGradient(scoreBoxX + 24, 0, scoreBoxX + 24 + fillW, 0);
+        barGrad.addColorStop(0, '#0052FF');
+        barGrad.addColorStop(1, '#10B981');
+        ctx.fillStyle = barGrad;
+        roundRect(ctx, scoreBoxX + 24, scoreBoxY + 44, fillW, 8, 4);
+        ctx.fill();
+      }
+
       ctx.restore();
     }
 
-    // SCENE 3: WEEKLY SPOTLIGHT & 2X MULTIPLIER
+    // =========================================================
+    // SCENE 3: WEEKLY SPOTLIGHT & 2.0x MULTIPLIER (7.5s - 11.5s)
+    // =========================================================
     function drawScene3(t) {
       ctx.save();
-      const fadeIn = Math.min(1, t * 2);
-      ctx.globalAlpha = fadeIn;
+      const enterProgress = easeOutCubic(Math.min(1, t * 1.8));
+      ctx.globalAlpha = enterProgress;
 
+      // Header Badge
       ctx.textAlign = 'center';
       ctx.fillStyle = '#F59E0B';
-      ctx.font = '700 13px "JetBrains Mono"';
-      ctx.fillText('PILLAR 2 • SOCIAL CURATION (ANTI-SPAM)', W/2, 130);
+      ctx.font = '800 13px "JetBrains Mono"';
+      ctx.fillText('PILLAR 2 • SOCIAL CURATION (ANTI-SPAM)', W/2, 120);
 
       ctx.fillStyle = '#FFFFFF';
       ctx.font = '900 42px "Plus Jakarta Sans"';
-      ctx.fillText('The Weekly Base Spotlight', W/2, 180);
+      ctx.fillText('The Weekly Base Spotlight', W/2, 168);
 
       ctx.fillStyle = '#94A3B8';
       ctx.font = '500 18px "Plus Jakarta Sans"';
-      ctx.fillText('Strict 1 non-stackable pass per week. Back high-effort content tagging @base.', W/2, 220);
+      ctx.fillText('Strict 1 non-stackable pass per week. Back high-effort content tagging @base.', W/2, 210);
 
-      // Spotlight Box
-      const boxW = 800;
-      const boxH = 240;
+      // Main Spotlight Dual-Column Container
+      const boxW = 880;
+      const boxH = 265;
       const boxX = W/2 - boxW/2;
-      const boxY = 270;
+      const boxY = 245;
 
-      ctx.fillStyle = '#0F131A';
+      // Background Card with glowing amber accent
+      ctx.fillStyle = '#0B0F18';
       roundRect(ctx, boxX, boxY, boxW, boxH, 20);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(245, 158, 11, 0.4)';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      // LEFT COLUMN: Curate-to-Earn Rewards
+      const leftX = boxX + 35;
+      
+      // Category Tag
+      ctx.fillStyle = 'rgba(245, 158, 11, 0.15)';
+      roundRect(ctx, leftX, boxY + 28, 185, 26, 8);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(245, 158, 11, 0.4)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#FBBF24';
+      ctx.font = '800 11px "JetBrains Mono"';
+      ctx.fillText('⚡ CURATE-TO-EARN POOL', leftX + 14, boxY + 45);
+
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = '800 22px "Plus Jakarta Sans"';
+      ctx.fillText('Weekly Content Rewards', leftX, boxY + 84);
+
+      // Creator Reward Card
+      const cardLeftW = 410;
+      ctx.fillStyle = '#101624';
+      roundRect(ctx, leftX, boxY + 102, cardLeftW, 50, 12);
+      ctx.fill();
+      ctx.strokeStyle = '#1D2536';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      ctx.font = '600 14px "Plus Jakarta Sans"';
+      ctx.fillStyle = '#CBD5E1';
+      ctx.fillText('🎨 High-Effort Creator', leftX + 16, boxY + 132);
+      ctx.textAlign = 'right';
+      ctx.font = '800 17px "JetBrains Mono"';
+      ctx.fillStyle = '#34D399';
+      ctx.fillText('+1,000 $CRED', leftX + cardLeftW - 16, boxY + 132);
+
+      // Curator Reward Card
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#101624';
+      roundRect(ctx, leftX, boxY + 162, cardLeftW, 50, 12);
+      ctx.fill();
+      ctx.strokeStyle = '#1D2536';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      ctx.font = '600 14px "Plus Jakarta Sans"';
+      ctx.fillStyle = '#CBD5E1';
+      ctx.fillText('🔍 Verified Citizen Vote', leftX + 16, boxY + 192);
+      ctx.textAlign = 'right';
+      ctx.font = '800 17px "JetBrains Mono"';
+      ctx.fillStyle = '#38BDF8';
+      ctx.fillText('+300 $CRED', leftX + cardLeftW - 16, boxY + 192);
+
+      // Anti-Spam Guarantee Footnote
+      ctx.textAlign = 'left';
+      ctx.font = '600 12px "JetBrains Mono"';
+      ctx.fillStyle = '#64748B';
+      ctx.fillText('• 1 Pass Per Citizen/Week • Anti-Spam Protected', leftX, boxY + 240);
+
+      // RIGHT COLUMN: 2.0x MULTIPLIER BADGE (POLISHED, NO OVERFLOW)
+      const badgeW = 350;
+      const badgeH = 205;
+      const badgeX = boxX + 495;
+      const badgeY = boxY + 30;
+      const badgeCenterX = badgeX + badgeW / 2;
+
+      // Glow effect for multiplier badge
+      ctx.save();
+      ctx.shadowColor = 'rgba(245, 158, 11, 0.35)';
+      ctx.shadowBlur = 20;
+
+      // Badge Container
+      const badgeGrad = ctx.createLinearGradient(badgeX, badgeY, badgeX, badgeY + badgeH);
+      badgeGrad.addColorStop(0, 'rgba(245, 158, 11, 0.18)');
+      badgeGrad.addColorStop(1, 'rgba(245, 158, 11, 0.05)');
+      ctx.fillStyle = badgeGrad;
+      roundRect(ctx, badgeX, badgeY, badgeW, badgeH, 18);
       ctx.fill();
       ctx.strokeStyle = '#F59E0B';
       ctx.lineWidth = 2;
       ctx.stroke();
+      ctx.restore();
 
-      // Inside Spotlight Box
-      ctx.textAlign = 'left';
-      ctx.fillStyle = '#F59E0B';
-      ctx.font = '800 24px "Plus Jakarta Sans"';
-      ctx.fillText('Curate-to-Earn Rewards:', boxX + 40, boxY + 60);
-
-      ctx.fillStyle = '#FFFFFF';
-      ctx.font = '600 18px "Plus Jakarta Sans"';
-      ctx.fillText('• Creator earns: +1,000 $CRED', boxX + 40, boxY + 110);
-      ctx.fillText('• You (Curator) earn: +300 $CRED', boxX + 40, boxY + 145);
-
-      // 2x Multiplier Badge
-      ctx.fillStyle = 'rgba(245, 158, 11, 0.15)';
-      roundRect(ctx, boxX + 460, boxY + 50, 290, 140, 16);
+      // Top Tag Inside Badge
+      ctx.fillStyle = 'rgba(245, 158, 11, 0.25)';
+      roundRect(ctx, badgeCenterX - 65, badgeY + 16, 130, 24, 12);
       ctx.fill();
-      ctx.strokeStyle = '#F59E0B';
+      ctx.strokeStyle = 'rgba(245, 158, 11, 0.5)';
+      ctx.lineWidth = 1;
       ctx.stroke();
 
       ctx.textAlign = 'center';
-      ctx.fillStyle = '#FBBF24';
-      ctx.font = '900 36px "Plus Jakarta Sans"';
-      ctx.fillText('2.0x MULTIPLIER', boxX + 605, boxY + 110);
-
-      ctx.font = '600 13px "JetBrains Mono"';
       ctx.fillStyle = '#FDE68A';
-      ctx.fillText('Triggered when @base retweets!', boxX + 605, boxY + 145);
+      ctx.font = '800 11px "JetBrains Mono"';
+      ctx.fillText('🔥 VIRAL REWARD', badgeCenterX, badgeY + 32);
+
+      // Prominent Hero 2.0x (Fixed font scale, no overflow)
+      ctx.fillStyle = '#FBBF24';
+      ctx.font = '900 52px "Plus Jakarta Sans"';
+      ctx.fillText('2.0x', badgeCenterX, badgeY + 88);
+
+      // Label below 2.0x
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = '800 15px "Plus Jakarta Sans"';
+      ctx.fillText('RETWEET MULTIPLIER', badgeCenterX, badgeY + 116);
+
+      // Condition Pill (Spacious & Clean)
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+      roundRect(ctx, badgeCenterX - 145, badgeY + 132, 290, 52, 10);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(245, 158, 11, 0.35)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      ctx.fillStyle = '#94A3B8';
+      ctx.font = '600 11px "JetBrains Mono"';
+      ctx.fillText('Triggered Automatically When', badgeCenterX, badgeY + 152);
+
+      ctx.fillStyle = '#FDE68A';
+      ctx.font = '800 13px "JetBrains Mono"';
+      ctx.fillText('⚡ @base Retweets Content', badgeCenterX, badgeY + 172);
+
       ctx.restore();
     }
 
-    // SCENE 4: MARKETPLACE & CALL TO ACTION
+    // ====================================================
+    // SCENE 4: TRADEABLE PASS MARKET & LAUNCH CTA (11.5s - 15s)
+    // ====================================================
     function drawScene4(t) {
       ctx.save();
-      const fadeIn = Math.min(1, t * 2);
-      ctx.globalAlpha = fadeIn;
+      const enterProgress = easeOutCubic(Math.min(1, t * 1.8));
+      ctx.globalAlpha = enterProgress;
 
+      // Header Badge
       ctx.textAlign = 'center';
       ctx.fillStyle = '#10B981';
-      ctx.font = '700 13px "JetBrains Mono"';
-      ctx.fillText('PILLAR 3 • TRADEABLE P2P PASS MARKET', W/2, 130);
+      ctx.font = '800 13px "JetBrains Mono"';
+      ctx.fillText('PILLAR 3 • TRADEABLE P2P PASS MARKET', W/2, 120);
 
       ctx.fillStyle = '#FFFFFF';
-      ctx.font = '900 44px "Plus Jakarta Sans"';
-      ctx.fillText('Curate Content or Sell Passes for ETH', W/2, 180);
+      ctx.font = '900 42px "Plus Jakarta Sans"';
+      ctx.fillText('Curate Content or Trade Passes for ETH', W/2, 168);
 
       ctx.fillStyle = '#94A3B8';
       ctx.font = '500 18px "Plus Jakarta Sans"';
-      ctx.fillText('Unused weekly passes can be listed on the decentralized pass market.', W/2, 220);
+      ctx.fillText('Unused weekly passes can be listed on the decentralized pass market.', W/2, 210);
 
-      // CTA Card
-      const ctaW = 760;
-      const ctaH = 220;
+      // High-Impact CTA Box
+      const ctaW = 820;
+      const ctaH = 260;
       const ctaX = W/2 - ctaW/2;
-      const ctaY = 270;
+      const ctaY = 245;
 
-      ctx.fillStyle = '#0A0E17';
+      ctx.save();
+      ctx.shadowColor = 'rgba(0, 82, 255, 0.4)';
+      ctx.shadowBlur = 25;
+
+      ctx.fillStyle = '#080C14';
       roundRect(ctx, ctaX, ctaY, ctaW, ctaH, 20);
       ctx.fill();
       ctx.strokeStyle = '#0052FF';
       ctx.lineWidth = 2.5;
       ctx.stroke();
+      ctx.restore();
 
-      ctx.fillStyle = '#0052FF';
-      ctx.font = '800 15px "JetBrains Mono"';
-      ctx.fillText('VERIFY YOUR BASE FOOTPRINT TODAY', W/2, ctaY + 60);
+      // Top Status Pill inside CTA
+      ctx.fillStyle = 'rgba(16, 185, 129, 0.15)';
+      roundRect(ctx, W/2 - 145, ctaY + 28, 290, 28, 14);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(16, 185, 129, 0.4)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
 
+      ctx.fillStyle = '#34D399';
+      ctx.font = '800 12px "JetBrains Mono"';
+      ctx.fillText('● BASE MAINNET IS LIVE (CHAIN 8453)', W/2, ctaY + 46);
+
+      // Hero Domain URL
       ctx.fillStyle = '#FFFFFF';
-      ctx.font = '900 38px "JetBrains Mono"';
+      ctx.font = '900 44px "JetBrains Mono"';
       ctx.fillText('basecred.onrender.com', W/2, ctaY + 115);
 
+      // Action Button Graphics
+      const btnW = 340;
+      const btnH = 50;
+      const btnX = W/2 - btnW/2;
+      const btnY = ctaY + 142;
+
+      ctx.save();
+      ctx.shadowColor = 'rgba(0, 82, 255, 0.6)';
+      ctx.shadowBlur = 15;
+
+      const btnGrad = ctx.createLinearGradient(btnX, btnY, btnX + btnW, btnY);
+      btnGrad.addColorStop(0, '#0052FF');
+      btnGrad.addColorStop(1, '#0038B8');
+      ctx.fillStyle = btnGrad;
+      roundRect(ctx, btnX, btnY, btnW, btnH, 25);
+      ctx.fill();
+      ctx.restore();
+
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = '800 16px "Plus Jakarta Sans"';
+      ctx.fillText('Check Your Footprint Score →', W/2, btnY + 31);
+
+      // Trust Bullets
       ctx.fillStyle = '#64748B';
-      ctx.font = '600 14px "Plus Jakarta Sans"';
-      ctx.fillText('100% Open-Source • Built on Base (8453) • Zero Sybil Tolerance', W/2, ctaY + 165);
+      ctx.font = '600 13px "JetBrains Mono"';
+      ctx.fillText('100% Open-Source • Zero Sybil Tolerance • Decentralized Pass AMM', W/2, ctaY + 228);
+
       ctx.restore();
     }
 
+    // Helper: Rounded Rectangle
     function roundRect(ctx, x, y, width, height, radius) {
       ctx.beginPath();
       ctx.moveTo(x + radius, y);
@@ -431,38 +753,86 @@
       ctx.closePath();
     }
 
-    function startPlayback() {
-      if (isPlaying) return;
+    // Playback Controls
+    function togglePlay() {
+      if (isPlaying) {
+        pausePlayback();
+      } else {
+        startPlayback(pausedTime);
+      }
+    }
+
+    function pausePlayback() {
+      isPlaying = false;
+      if (animationId) cancelAnimationFrame(animationId);
+      document.getElementById('playIcon').textContent = '▶';
+      document.getElementById('playBtnText').textContent = 'Play';
+    }
+
+    function startPlayback(offsetSec = 0) {
+      if (animationId) cancelAnimationFrame(animationId);
       isPlaying = true;
-      startTime = performance.now();
+      document.getElementById('playIcon').textContent = '⏸';
+      document.getElementById('playBtnText').textContent = 'Pause';
+
+      startTime = performance.now() - (offsetSec * 1000);
 
       function loop(now) {
+        if (!isPlaying) return;
         const elapsed = (now - startTime) / 1000;
-        if (elapsed > TOTAL_DURATION) {
+        if (elapsed >= TOTAL_DURATION) {
           render(TOTAL_DURATION);
-          isPlaying = false;
+          pausePlayback();
+          pausedTime = 0;
           return;
         }
+        pausedTime = elapsed;
         render(elapsed);
         animationId = requestAnimationFrame(loop);
       }
       animationId = requestAnimationFrame(loop);
     }
 
-    // Auto-record to video file
+    function jumpTo(sec) {
+      pausePlayback();
+      pausedTime = sec;
+      render(sec);
+      startPlayback(sec);
+    }
+
+    function onScrub(val) {
+      pausePlayback();
+      pausedTime = parseFloat(val);
+      render(pausedTime);
+    }
+
+    // Snapshot feature: Download current canvas frame as high-res image
+    function downloadSnapshot() {
+      const link = document.createElement('a');
+      link.download = `basecred_frame_${pausedTime.toFixed(1)}s.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+
+    // 60FPS Video Recording & Auto-Export
     async function recordAndExport() {
       if (isRecording) return;
       isRecording = true;
+      pausePlayback();
 
       const recordBtn = document.getElementById('recordBtn');
       const recordBtnText = document.getElementById('recordBtnText');
+      const recordDot = document.getElementById('recordDot');
       const badge = document.getElementById('recordingBadge');
+      const recordStatus = document.getElementById('recordStatus');
 
       recordBtn.disabled = true;
-      recordBtnText.textContent = 'Recording 15s Video...';
+      recordBtnText.textContent = 'Rendering Video (60 FPS)...';
+      recordDot.classList.remove('bg-red-400');
+      recordDot.classList.add('bg-amber-400');
       badge.classList.remove('hidden');
 
-      // Check supported MIME types (WebM or MP4)
+      // Best supported format detection
       let mime = 'video/webm;codecs=vp9';
       let ext = 'webm';
       if (MediaRecorder.isTypeSupported('video/mp4;codecs=avc1')) {
@@ -471,10 +841,13 @@
       } else if (MediaRecorder.isTypeSupported('video/mp4')) {
         mime = 'video/mp4';
         ext = 'mp4';
+      } else if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8')) {
+        mime = 'video/webm;codecs=vp8';
+        ext = 'webm';
       }
 
       const stream = canvas.captureStream(60);
-      const recorder = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: 6000000 });
+      const recorder = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: 8000000 });
       const chunks = [];
 
       recorder.ondataavailable = (e) => {
@@ -486,21 +859,27 @@
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `basecred_explainer_video.${ext}`;
+        a.download = `basecred_explainer_15s.${ext}`;
         a.click();
 
         recordBtn.disabled = false;
-        recordBtnText.textContent = '⬇ Download Video Again';
+        recordBtnText.textContent = '⬇ Record & Download';
+        recordDot.classList.remove('bg-amber-400');
+        recordDot.classList.add('bg-red-400');
         badge.classList.add('hidden');
         isRecording = false;
+        jumpTo(0);
       };
 
       recorder.start();
-      startTime = performance.now();
+      const recStart = performance.now();
 
       function recordLoop(now) {
-        const elapsed = (now - startTime) / 1000;
+        const elapsed = (now - recStart) / 1000;
         render(elapsed);
+        const pct = Math.floor((elapsed / TOTAL_DURATION) * 100);
+        recordStatus.textContent = `Rendering Video (${pct}%)...`;
+
         if (elapsed < TOTAL_DURATION) {
           requestAnimationFrame(recordLoop);
         } else {
@@ -511,10 +890,13 @@
       requestAnimationFrame(recordLoop);
     }
 
-    // Initial first frame render
-    window.onload = () => {
-      render(0.8);
-      startPlayback();
+    // Wait for web fonts before initial render to prevent font flash
+    window.onload = async () => {
+      if (document.fonts) {
+        await document.fonts.ready;
+      }
+      render(0);
+      startPlayback(0);
     };
   </script>
 </body>
