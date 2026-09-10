@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BaseCred Explainer Video Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #04060A;
+      color: #F8FAFC;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 select-none">
+
+  <!-- Control Header -->
+  <div class="max-w-4xl w-full flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">
+    <div>
+      <div class="flex items-center gap-2">
+        <div class="w-3 h-3 rounded-full bg-[#0052FF]"></div>
+        <h1 class="text-lg font-bold text-white tracking-tight">BaseCred ($CRED) Explainer Video Studio</h1>
+      </div>
+      <p class="text-xs text-slate-400 mt-0.5">15-Second High-Impact Motion Graphics Video for Twitter / X</p>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <button id="playBtn" onclick="startPlayback()" class="px-4 py-2 rounded-xl bg-[#131822] hover:bg-[#1A2230] border border-[#1E2533] text-xs font-bold text-white transition flex items-center gap-2">
+        <span>▶ Replay</span>
+      </button>
+
+      <button id="recordBtn" onclick="recordAndExport()" class="px-5 py-2 rounded-xl bg-[#0052FF] hover:bg-[#0045D8] text-white text-xs font-extrabold transition shadow-lg flex items-center gap-2 active:scale-95">
+        <span id="recordIcon" class="w-2.5 h-2.5 rounded-full bg-red-400 animate-pulse"></span>
+        <span id="recordBtnText">⬇ Record & Download Video</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Video Canvas Container (16:9 1280x720 HD) -->
+  <div class="relative max-w-4xl w-full aspect-video bg-[#06080C] rounded-2xl overflow-hidden border border-[#1E2533] shadow-2xl flex items-center justify-center">
+    <canvas id="videoCanvas" width="1280" height="720" class="w-full h-full object-contain"></canvas>
+    
+    <!-- Recording progress overlay -->
+    <div id="recordingBadge" class="hidden absolute top-4 right-4 px-3 py-1.5 rounded-lg bg-red-500/20 border border-red-500/40 text-red-400 text-xs font-mono font-bold flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+      <span id="recordStatus">Rendering Video (60 FPS)...</span>
+    </div>
+  </div>
+
+  <!-- Instructions note below -->
+  <div class="max-w-4xl w-full mt-4 text-center text-xs text-slate-500 flex items-center justify-between">
+    <span>HD 1280×720 • Optimized for X/Twitter Video Uploads</span>
+    <span class="mono">Duration: 15s • Codec: MP4 / WebM</span>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('videoCanvas');
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width;
+    const H = canvas.height;
+
+    let startTime = 0;
+    let isPlaying = false;
+    let animationId = null;
+    let isRecording = false;
+
+    // Load logo image if available
+    const logoImg = new Image();
+    logoImg.src = './avatar.jpg';
+
+    // Total Duration: 15 Seconds
+    const TOTAL_DURATION = 15.0;
+
+    // Star/Particle network
+    const particles = [];
+    for (let i = 0; i < 40; i++) {
+      particles.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        vx: (Math.random() - 0.5) * 0.8,
+        vy: (Math.random() - 0.5) * 0.8,
+        r: Math.random() * 2 + 1
+      });
+    }
+
+    function render(timeSec) {
+      // Clear screen
+      ctx.fillStyle = '#06080C';
+      ctx.fillRect(0, 0, W, H);
+
+      // 1. Background Grid & Particles
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+      ctx.lineWidth = 1;
+      const gridSize = 48;
+      for (let x = 0; x < W; x += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, H);
+        ctx.stroke();
+      }
+      for (let y = 0; y < H; y += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(W, y);
+        ctx.stroke();
+      }
+
+      // Corner Ambient Glow
+      const glowGrad = ctx.createRadialGradient(0, 0, 10, 0, 0, 500);
+      glowGrad.addColorStop(0, 'rgba(0, 82, 255, 0.25)');
+      glowGrad.addColorStop(1, 'transparent');
+      ctx.fillStyle = glowGrad;
+      ctx.fillRect(0, 0, W, H);
+
+      const glowGrad2 = ctx.createRadialGradient(W, H, 10, W, H, 600);
+      glowGrad2.addColorStop(0, 'rgba(0, 82, 255, 0.18)');
+      glowGrad2.addColorStop(1, 'transparent');
+      ctx.fillStyle = glowGrad2;
+      ctx.fillRect(0, 0, W, H);
+
+      // Particle dots
+      ctx.fillStyle = 'rgba(0, 82, 255, 0.6)';
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0) p.x = W;
+        if (p.x > W) p.x = 0;
+        if (p.y < 0) p.y = H;
+        if (p.y > H) p.y = 0;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // Top Progress Bar
+      const progress = Math.min(1.0, timeSec / TOTAL_DURATION);
+      ctx.fillStyle = '#1E2533';
+      ctx.fillRect(0, 0, W, 4);
+      ctx.fillStyle = '#0052FF';
+      ctx.fillRect(0, 0, W * progress, 4);
+
+      // Timeline Scenes:
+      // Scene 1: (0.0s - 3.5s) The Hook & The Problem
+      // Scene 2: (3.5s - 7.5s) 8-Factor Footprint Engine
+      // Scene 3: (7.5s - 11.5s) Weekly Spotlight & 2x Multiplier
+      // Scene 4: (11.5s - 15.0s) P2P Market & TGE Launch
+
+      if (timeSec < 3.5) {
+        drawScene1(timeSec);
+      } else if (timeSec < 7.5) {
+        drawScene2(timeSec - 3.5);
+      } else if (timeSec < 11.5) {
+        drawScene3(timeSec - 7.5);
+      } else {
+        drawScene4(timeSec - 11.5);
+      }
+
+      // Persistent Base Watermark / Header
+      drawHeaderWatermark();
+    }
+
+    function drawHeaderWatermark() {
+      ctx.save();
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+      ctx.font = '600 14px "JetBrains Mono"';
+      ctx.textAlign = 'right';
+      ctx.fillText('BASE MAINNET • CHAIN 8453', W - 40, 45);
+
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#0052FF';
+      ctx.beginPath();
+      ctx.arc(46, 40, 6, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = '800 16px "Plus Jakarta Sans"';
+      ctx.fillText('BaseCred ($CRED)', 62, 45);
+      ctx.restore();
+    }
+
+    // SCENE 1: THE HOOK
+    function drawScene1(t) {
+      ctx.save();
+      const fadeIn = Math.min(1, t * 1.5);
+      ctx.globalAlpha = fadeIn;
+
+      // Badge
+      ctx.fillStyle = 'rgba(0, 82, 255, 0.15)';
+      roundRect(ctx, W/2 - 160, 160, 320, 36, 18);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(0, 82, 255, 0.4)';
+      ctx.stroke();
+
+      ctx.fillStyle = '#60A5FA';
+      ctx.font = '700 12px "JetBrains Mono"';
+      ctx.textAlign = 'center';
+      ctx.fillText('THE ON-CHAIN REPUTATION PROTOCOL', W/2, 183);
+
+      // Main Title
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = '900 48px "Plus Jakarta Sans"';
+      ctx.fillText('Most airdrops are farmed by bots.', W/2, 260);
+
+      ctx.fillStyle = '#0052FF';
+      ctx.font = '900 52px "Plus Jakarta Sans"';
+      ctx.fillText('Base deserves better.', W/2, 330);
+
+      // Subtitle
+      ctx.fillStyle = '#94A3B8';
+      ctx.font = '500 20px "Plus Jakarta Sans"';
+      ctx.fillText('Introducing verifiable on-chain footprint scoring on Base L2.', W/2, 400);
+
+      // Big Coin Icon Center
+      const scale = 1 + Math.sin(t * 3) * 0.05;
+      ctx.translate(W/2, 530);
+      ctx.scale(scale, scale);
+
+      ctx.beginPath();
+      ctx.arc(0, 0, 64, 0, Math.PI * 2);
+      ctx.fillStyle = '#0052FF';
+      ctx.fill();
+      ctx.lineWidth = 4;
+      ctx.strokeStyle = '#FFFFFF';
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(0, 0, 36, 0, Math.PI * 2);
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // SCENE 2: 8-FACTOR FOOTPRINT
+    function drawScene2(t) {
+      ctx.save();
+      const fadeIn = Math.min(1, t * 2);
+      ctx.globalAlpha = fadeIn;
+
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#38BDF8';
+      ctx.font = '700 13px "JetBrains Mono"';
+      ctx.fillText('PILLAR 1 • PROVABLE ON-CHAIN FOOTPRINT', W/2, 130);
+
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = '900 40px "Plus Jakarta Sans"';
+      ctx.fillText('8 Verifiable On-Chain Factors', W/2, 180);
+
+      // 8 Factor Grid Cards
+      const factors = [
+        { icon: '⛽', title: 'Gas Burnt', val: '0.185 ETH' },
+        { icon: '🏛️', title: 'L1 Vintage', val: '3.2 Years' },
+        { icon: '🔷', title: 'Base Nonce', val: '148 Txs' },
+        { icon: '📅', title: 'Consistency', val: '10 Months' },
+        { icon: '🌉', title: 'Portal Bridge', val: 'Verified' },
+        { icon: '🆔', title: 'Basename', val: '.base.eth' },
+        { icon: '⚡', title: 'Base DeFi', val: '4 Protocols' },
+        { icon: '🛡️', title: 'Sybil Health', val: '95% Human' },
+      ];
+
+      const startX = 140;
+      const startY = 240;
+      const cardW = 230;
+      const cardH = 95;
+      const gapX = 25;
+      const gapY = 25;
+
+      factors.forEach((f, idx) => {
+        const col = idx % 4;
+        const row = Math.floor(idx / 4);
+        const x = startX + col * (cardW + gapX);
+        const y = startY + row * (cardH + gapY);
+
+        const cardProgress = Math.min(1, Math.max(0, (t - idx * 0.15) * 3));
+        ctx.save();
+        ctx.globalAlpha = cardProgress;
+
+        ctx.fillStyle = '#0F131A';
+        roundRect(ctx, x, y, cardW, cardH, 14);
+        ctx.fill();
+        ctx.strokeStyle = idx === 7 ? '#10B981' : '#1E2533';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        ctx.textAlign = 'left';
+        ctx.font = '22px sans-serif';
+        ctx.fillText(f.icon, x + 16, y + 42);
+
+        ctx.font = '700 13px "Plus Jakarta Sans"';
+        ctx.fillStyle = '#94A3B8';
+        ctx.fillText(f.title, x + 52, y + 36);
+
+        ctx.font = '800 18px "JetBrains Mono"';
+        ctx.fillStyle = idx === 7 ? '#34D399' : '#FFFFFF';
+        ctx.fillText(f.val, x + 52, y + 68);
+        ctx.restore();
+      });
+
+      // Total Score Counter at bottom
+      const scoreCount = Math.floor(Math.min(1020, t * 500));
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = '800 22px "JetBrains Mono"';
+      ctx.fillText(`Audited Score: ${scoreCount} / 1500 (Tier 1: Base Pioneer)`, W/2, 520);
+      ctx.restore();
+    }
+
+    // SCENE 3: WEEKLY SPOTLIGHT & 2X MULTIPLIER
+    function drawScene3(t) {
+      ctx.save();
+      const fadeIn = Math.min(1, t * 2);
+      ctx.globalAlpha = fadeIn;
+
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#F59E0B';
+      ctx.font = '700 13px "JetBrains Mono"';
+      ctx.fillText('PILLAR 2 • SOCIAL CURATION (ANTI-SPAM)', W/2, 130);
+
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = '900 42px "Plus Jakarta Sans"';
+      ctx.fillText('The Weekly Base Spotlight', W/2, 180);
+
+      ctx.fillStyle = '#94A3B8';
+      ctx.font = '500 18px "Plus Jakarta Sans"';
+      ctx.fillText('Strict 1 non-stackable pass per week. Back high-effort content tagging @base.', W/2, 220);
+
+      // Spotlight Box
+      const boxW = 800;
+      const boxH = 240;
+      const boxX = W/2 - boxW/2;
+      const boxY = 270;
+
+      ctx.fillStyle = '#0F131A';
+      roundRect(ctx, boxX, boxY, boxW, boxH, 20);
+      ctx.fill();
+      ctx.strokeStyle = '#F59E0B';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Inside Spotlight Box
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#F59E0B';
+      ctx.font = '800 24px "Plus Jakarta Sans"';
+      ctx.fillText('Curate-to-Earn Rewards:', boxX + 40, boxY + 60);
+
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = '600 18px "Plus Jakarta Sans"';
+      ctx.fillText('• Creator earns: +1,000 $CRED', boxX + 40, boxY + 110);
+      ctx.fillText('• You (Curator) earn: +300 $CRED', boxX + 40, boxY + 145);
+
+      // 2x Multiplier Badge
+      ctx.fillStyle = 'rgba(245, 158, 11, 0.15)';
+      roundRect(ctx, boxX + 460, boxY + 50, 290, 140, 16);
+      ctx.fill();
+      ctx.strokeStyle = '#F59E0B';
+      ctx.stroke();
+
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#FBBF24';
+      ctx.font = '900 36px "Plus Jakarta Sans"';
+      ctx.fillText('2.0x MULTIPLIER', boxX + 605, boxY + 110);
+
+      ctx.font = '600 13px "JetBrains Mono"';
+      ctx.fillStyle = '#FDE68A';
+      ctx.fillText('Triggered when @base retweets!', boxX + 605, boxY + 145);
+      ctx.restore();
+    }
+
+    // SCENE 4: MARKETPLACE & CALL TO ACTION
+    function drawScene4(t) {
+      ctx.save();
+      const fadeIn = Math.min(1, t * 2);
+      ctx.globalAlpha = fadeIn;
+
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#10B981';
+      ctx.font = '700 13px "JetBrains Mono"';
+      ctx.fillText('PILLAR 3 • TRADEABLE P2P PASS MARKET', W/2, 130);
+
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = '900 44px "Plus Jakarta Sans"';
+      ctx.fillText('Curate Content or Sell Passes for ETH', W/2, 180);
+
+      ctx.fillStyle = '#94A3B8';
+      ctx.font = '500 18px "Plus Jakarta Sans"';
+      ctx.fillText('Unused weekly passes can be listed on the decentralized pass market.', W/2, 220);
+
+      // CTA Card
+      const ctaW = 760;
+      const ctaH = 220;
+      const ctaX = W/2 - ctaW/2;
+      const ctaY = 270;
+
+      ctx.fillStyle = '#0A0E17';
+      roundRect(ctx, ctaX, ctaY, ctaW, ctaH, 20);
+      ctx.fill();
+      ctx.strokeStyle = '#0052FF';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+
+      ctx.fillStyle = '#0052FF';
+      ctx.font = '800 15px "JetBrains Mono"';
+      ctx.fillText('VERIFY YOUR BASE FOOTPRINT TODAY', W/2, ctaY + 60);
+
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = '900 38px "JetBrains Mono"';
+      ctx.fillText('basecred.onrender.com', W/2, ctaY + 115);
+
+      ctx.fillStyle = '#64748B';
+      ctx.font = '600 14px "Plus Jakarta Sans"';
+      ctx.fillText('100% Open-Source • Built on Base (8453) • Zero Sybil Tolerance', W/2, ctaY + 165);
+      ctx.restore();
+    }
+
+    function roundRect(ctx, x, y, width, height, radius) {
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + width - radius, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+      ctx.lineTo(x + width, y + height - radius);
+      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+      ctx.lineTo(x + radius, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
+    }
+
+    function startPlayback() {
+      if (isPlaying) return;
+      isPlaying = true;
+      startTime = performance.now();
+
+      function loop(now) {
+        const elapsed = (now - startTime) / 1000;
+        if (elapsed > TOTAL_DURATION) {
+          render(TOTAL_DURATION);
+          isPlaying = false;
+          return;
+        }
+        render(elapsed);
+        animationId = requestAnimationFrame(loop);
+      }
+      animationId = requestAnimationFrame(loop);
+    }
+
+    // Auto-record to video file
+    async function recordAndExport() {
+      if (isRecording) return;
+      isRecording = true;
+
+      const recordBtn = document.getElementById('recordBtn');
+      const recordBtnText = document.getElementById('recordBtnText');
+      const badge = document.getElementById('recordingBadge');
+
+      recordBtn.disabled = true;
+      recordBtnText.textContent = 'Recording 15s Video...';
+      badge.classList.remove('hidden');
+
+      // Check supported MIME types (WebM or MP4)
+      let mime = 'video/webm;codecs=vp9';
+      let ext = 'webm';
+      if (MediaRecorder.isTypeSupported('video/mp4;codecs=avc1')) {
+        mime = 'video/mp4;codecs=avc1';
+        ext = 'mp4';
+      } else if (MediaRecorder.isTypeSupported('video/mp4')) {
+        mime = 'video/mp4';
+        ext = 'mp4';
+      }
+
+      const stream = canvas.captureStream(60);
+      const recorder = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: 6000000 });
+      const chunks = [];
+
+      recorder.ondataavailable = (e) => {
+        if (e.data.size > 0) chunks.push(e.data);
+      };
+
+      recorder.onstop = () => {
+        const blob = new Blob(chunks, { type: mime });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `basecred_explainer_video.${ext}`;
+        a.click();
+
+        recordBtn.disabled = false;
+        recordBtnText.textContent = '⬇ Download Video Again';
+        badge.classList.add('hidden');
+        isRecording = false;
+      };
+
+      recorder.start();
+      startTime = performance.now();
+
+      function recordLoop(now) {
+        const elapsed = (now - startTime) / 1000;
+        render(elapsed);
+        if (elapsed < TOTAL_DURATION) {
+          requestAnimationFrame(recordLoop);
+        } else {
+          render(TOTAL_DURATION);
+          recorder.stop();
+        }
+      }
+      requestAnimationFrame(recordLoop);
+    }
+
+    // Initial first frame render
+    window.onload = () => {
+      render(0.8);
+      startPlayback();
+    };
+  </script>
+</body>
+</html>
