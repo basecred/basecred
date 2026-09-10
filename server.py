@@ -16,7 +16,7 @@ from engine.merkle import MerkleTree
 from engine.database import (
     init_db, get_or_register_user, link_twitter_account,
     get_hall_of_fame, get_recent_endorsements, get_active_market_listings,
-    current_epoch_str
+    get_db_stats, current_epoch_str
 )
 from engine.spotlight import (
     validate_and_endorse_tweet, list_pass_for_sale, buy_marketplace_pass
@@ -44,6 +44,7 @@ class BaseCredHandler(SimpleHTTPRequestHandler):
         path = parsed.path
 
         if path == "/api/stats":
+            db_stats = get_db_stats()
             self.send_json({
                 "project_name": "BaseCred",
                 "token_symbol": "$CRED",
@@ -51,10 +52,11 @@ class BaseCredHandler(SimpleHTTPRequestHandler):
                 "rule_limit": "1 Spotlight Pass per Week",
                 "target_chain": "Base Mainnet (8453)",
                 "merkle_root": SNAPSHOT_DATA.get("merkle_root", "0x0"),
-                "total_eligible_wallets": SNAPSHOT_DATA.get("total_eligible_wallets", 10),
-                "total_credits_allocated": SNAPSHOT_DATA.get("total_tokens_allocated", 90000)
+                "total_eligible_wallets": max(db_stats["total_users"], SNAPSHOT_DATA.get("total_eligible_wallets", 10)),
+                "total_credits_allocated": max(db_stats["total_credits"], SNAPSHOT_DATA.get("total_tokens_allocated", 90000))
             })
             return
+
 
         elif path == "/api/spotlight/hall-of-fame":
             fame = get_hall_of_fame()

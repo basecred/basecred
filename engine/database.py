@@ -237,3 +237,20 @@ def get_active_market_listings() -> List[Dict[str, Any]]:
     rows = [dict(r) for r in cursor.fetchall()]
     conn.close()
     return rows
+
+def get_db_stats() -> Dict[str, Any]:
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("""
+    SELECT 
+        COUNT(*) as total_users,
+        COALESCE(SUM(onchain_credits + curator_credits + creator_credits), 0) as total_credits
+    FROM users
+    """)
+    row = cursor.fetchone()
+    conn.close()
+    return {
+        "total_users": row["total_users"] if row else 0,
+        "total_credits": row["total_credits"] if row else 0
+    }
+
