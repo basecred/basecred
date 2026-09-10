@@ -231,6 +231,22 @@ function renderFootprintResults(data) {
   }
 }
 
+function shareScoreOnTwitter() {
+  if (!currentEligibilityData) {
+    alert("Please evaluate a wallet footprint first!");
+    return;
+  }
+  const score = currentEligibilityData.total_score || 1020;
+  const tier = currentEligibilityData.tier_name || "Tier 1: Base Pioneer";
+  const f = currentEligibilityData.factors || {};
+  const gasInfo = f.gas ? `${f.gas.eth_gas} ETH burnt` : "Active on Base";
+  
+  const tweetText = `My on-chain score is ${score} pts (${tier}) on @BaseCred ($CRED)! 🔵\n\n⛽ ${gasInfo}\n\nVerify your Base footprint & claim your weekly pass:\n👉 https://basecred.onrender.com`;
+  
+  const intentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
+  window.open(intentUrl, "_blank");
+}
+
 // -------------------------------------------------------------
 // WEEKLY SPOTLIGHT ENDORSEMENT LOGIC
 // -------------------------------------------------------------
