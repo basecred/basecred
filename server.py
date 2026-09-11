@@ -43,7 +43,14 @@ class BaseCredHandler(SimpleHTTPRequestHandler):
         parsed = urllib.parse.urlparse(self.path)
         path = parsed.path
 
+        if path == "/favicon.ico":
+            self.send_response(302)
+            self.send_header("Location", "/favicon.svg")
+            self.end_headers()
+            return
+
         if path == "/api/stats":
+
             db_stats = get_db_stats()
             self.send_json({
                 "project_name": "BaseCred",

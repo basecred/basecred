@@ -143,13 +143,45 @@ function setSampleAddress(addr) {
 async function pasteFromClipboard() {
   try {
     const text = await navigator.clipboard.readText();
-    if (text && text.trim().startsWith("0x")) {
+    if (text && text.trim()) {
       document.getElementById("addressInput").value = text.trim();
       checkWalletEligibility();
     }
   } catch (e) {
-    alert("Please paste the address directly into the field.");
+    const input = document.getElementById("addressInput");
+    if (input) input.focus();
   }
+}
+
+// Support Basename (.base.eth) and ENS (.eth) resolution
+async function resolveAddressOrName(inputVal) {
+  const val = (inputVal || "").trim().toLowerCase();
+  if (val.startsWith("0x") && val.length === 42) return val;
+
+  // Instant fast-path for prominent ecosystem Basenames
+  const known = {
+    "vitalik.base.eth": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+    "vitalik.eth": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+    "jesse.base.eth": "0x221245c38676a0868f76fa780fe98df00411a141",
+    "jessepollak.base.eth": "0x221245c38676a0868f76fa780fe98df00411a141",
+    "coinbase.base.eth": "0x4b48841d4b322d4b12e2f1059ca7154055c53792"
+  };
+  if (known[val]) return known[val];
+
+  if (val.endsWith(".base.eth") || val.endsWith(".eth")) {
+    try {
+      const provider = new ethers.JsonRpcProvider("https://mainnet.base.org");
+      const resolved = await provider.resolveName(val);
+      if (resolved && resolved.startsWith("0x") && resolved.length === 42) return resolved;
+    } catch (e) {}
+
+    try {
+      const ethProvider = new ethers.JsonRpcProvider("https://eth.llamarpc.com");
+      const resolvedEth = await ethProvider.resolveName(val);
+      if (resolvedEth && resolvedEth.startsWith("0x") && resolvedEth.length === 42) return resolvedEth;
+    } catch (e) {}
+  }
+  return null;
 }
 
 // -------------------------------------------------------------
@@ -159,8 +191,8 @@ async function checkWalletEligibility() {
   const input = document.getElementById("addressInput");
   const rawAddr = (input.value || "").trim();
 
-  if (!rawAddr || !rawAddr.startsWith("0x") || rawAddr.length !== 42) {
-    alert("Please enter a valid 42-character EVM address.");
+  if (!rawAddr) {
+    alert("Please enter a Base address or Basename (.base.eth).");
     return;
   }
 
@@ -169,13 +201,30 @@ async function checkWalletEligibility() {
   const scanner = document.getElementById("loadingScanner");
   const resultsContainer = document.getElementById("resultsContainer");
 
+  let targetAddr = rawAddr;
+  if (!targetAddr.startsWith("0x") || targetAddr.length !== 42) {
+    checkBtn.disabled = true;
+    checkBtnText.textContent = "Resolving Basename / ENS...";
+    scanner.classList.remove("hidden");
+    const resolved = await resolveAddressOrName(targetAddr);
+    if (resolved) {
+      targetAddr = resolved;
+    } else {
+      scanner.classList.add("hidden");
+      alert(`Could not resolve Basename "${rawAddr}". Please enter a valid 42-character 0x... EVM address.`);
+      checkBtn.disabled = false;
+      checkBtnText.textContent = "Evaluate Footprint & Claim Weekly Pass";
+      return;
+    }
+  }
+
   checkBtn.disabled = true;
   checkBtnText.textContent = "Auditing Footprint...";
   resultsContainer.classList.add("hidden");
   scanner.classList.remove("hidden");
 
   try {
-    const resp = await fetch(`/api/check?address=${encodeURIComponent(rawAddr)}`);
+    const resp = await fetch(`/api/check?address=${encodeURIComponent(targetAddr)}`);
     if (resp.ok) {
       const data = await resp.json();
       currentEligibilityData = data;
@@ -194,6 +243,7 @@ async function checkWalletEligibility() {
     checkBtnText.textContent = "Evaluate Footprint & Claim Weekly Pass";
   }
 }
+
 
 function renderFootprintResults(data) {
   const f = data.factors || {};
