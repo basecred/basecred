@@ -16,7 +16,7 @@ from engine.merkle import MerkleTree
 from engine.database import (
     init_db, get_or_register_user, link_twitter_account,
     get_hall_of_fame, get_recent_endorsements, get_active_market_listings,
-    get_db_stats, current_epoch_str
+    get_db_stats, get_recent_audits, current_epoch_str
 )
 from engine.spotlight import (
     validate_and_endorse_tweet, list_pass_for_sale, buy_marketplace_pass
@@ -122,6 +122,11 @@ class BaseCredHandler(SimpleHTTPRequestHandler):
         elif path == "/api/feed":
             recent = get_recent_endorsements(limit=10)
             self.send_json({"feed": recent})
+            return
+
+        elif path == "/api/recent-audits":
+            audits = get_recent_audits(limit=6)
+            self.send_json({"recent_audits": audits})
             return
 
         return super().do_GET()

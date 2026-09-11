@@ -10,12 +10,46 @@ let currentEligibilityData = null;
 let currentEpoch = "2026-W36";
 let activeTab = "footprint";
 
+let recentAuditsList = [];
+let recentAuditIndex = 0;
+
 document.addEventListener("DOMContentLoaded", () => {
   if (window.lucide) window.lucide.createIcons();
   checkIfAlreadyConnected();
   fetchHallOfFame();
   fetchMarketListings();
+  fetchRecentAudits();
+  setInterval(updateTickerDisplay, 3500);
 });
+
+async function fetchRecentAudits() {
+  try {
+    const res = await fetch("/api/recent-audits");
+    if (res.ok) {
+      const data = await res.json();
+      if (data.recent_audits && data.recent_audits.length > 0) {
+        recentAuditsList = data.recent_audits;
+        updateTickerDisplay();
+      }
+    }
+  } catch (e) {}
+}
+
+function updateTickerDisplay() {
+  if (!recentAuditsList || recentAuditsList.length === 0) return;
+  const audit = recentAuditsList[recentAuditIndex % recentAuditsList.length];
+  recentAuditIndex++;
+
+  const addrEl = document.getElementById("tickerAddress");
+  const scoreEl = document.getElementById("tickerScore");
+
+  if (addrEl && scoreEl && audit) {
+    const short = audit.address.slice(0, 6) + "..." + audit.address.slice(-4);
+    addrEl.textContent = short;
+    scoreEl.textContent = `${Number(audit.onchain_score).toLocaleString()} pts • ${audit.tier || 'Verified'}`;
+  }
+}
+
 
 // Tab Switcher
 function switchTab(tab) {
@@ -146,6 +180,7 @@ async function checkWalletEligibility() {
       const data = await resp.json();
       currentEligibilityData = data;
       renderFootprintResults(data);
+      fetchRecentAudits();
       scanner.classList.add("hidden");
       resultsContainer.classList.remove("hidden");
       if (window.lucide) window.lucide.createIcons();

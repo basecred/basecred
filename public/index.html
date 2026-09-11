@@ -333,8 +333,20 @@
             </button>
           </div>
 
+          <!-- Live Recent Audits Ticker (Real-Time Social Proof) -->
+          <div id="liveAuditsStrip" class="mt-3 flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-[#070A0F] border border-[#182030] text-xs font-mono">
+            <div class="flex items-center gap-2 overflow-hidden text-ellipsis whitespace-nowrap">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
+              <span class="text-slate-500 font-sans font-bold uppercase text-[10px] shrink-0">Live Audit:</span>
+              <span id="tickerAddress" class="text-blue-400 font-semibold">0xa9f7...0b45</span>
+              <span id="tickerScore" class="text-slate-300">1,160 pts • Tier 1 Pioneer</span>
+            </div>
+            <span class="text-[10px] text-slate-500 font-sans shrink-0 hidden sm:inline">Base L2 Verified</span>
+          </div>
+
         </div>
       </section>
+
 
       <!-- SCANNER LOADING ANIMATION (On-Chain Block Indexer Aesthetic) -->
       <div id="loadingScanner" class="hidden max-w-2xl mx-auto base-card rounded-2xl p-8 border border-[#1E2533] text-center space-y-4">

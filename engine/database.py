@@ -254,3 +254,17 @@ def get_db_stats() -> Dict[str, Any]:
         "total_credits": row["total_credits"] if row else 0
     }
 
+def get_recent_audits(limit: int = 6) -> List[Dict[str, Any]]:
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("""
+    SELECT address, twitter_handle, onchain_score, tier, created_at
+    FROM users
+    ORDER BY created_at DESC
+    LIMIT ?
+    """, (limit,))
+    rows = [dict(r) for r in cursor.fetchall()]
+    conn.close()
+    return rows
+
+
